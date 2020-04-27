@@ -11,7 +11,7 @@ def docSep(row, n=150):
   
   return text_
 
-def removeSmallSent(row):
+def removeSmallDoc(row):
 
   text = row['comment']
   text = text.split(' ')
