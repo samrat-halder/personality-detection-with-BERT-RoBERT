@@ -1,7 +1,4 @@
 #%tensorflow_version 1.11
-from tensorflow.python.util import deprecation
-deprecation._PRINT_DEPRECATION_WARNINGS = False
-
 import pandas as pd
 import os 
 import datetime
@@ -17,29 +14,21 @@ import run_classifier
 import tokenization
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
 
-
+from func import *
+#######################
+TRAIN_BATCH_SIZE = 8
+EVAL_BATCH_SIZE = 4
+LEARNING_RATE = 1e-5
+NUM_TRAIN_EPOCHS = 1.0
+WARMUP_PROPORTION = 0.1
+MAX_SEQ_LENGTH = 100
+#######################
 folder = './../model_folder'
 with zipfile.ZipFile(os.path.join(folder, "uncased_L-12_H-768_A-12.zip"),"r") as zip_ref:
     zip_ref.extractall(folder)
-
-def create_examples(lines, set_type, labels=None):
-  #Generate data for the BERT model
-  guid = f'{set_type}'
-  examples = []
-  if guid == 'train':
-      for line, label in zip(lines, labels):
-          text_a = line
-          label = str(label)
-          examples.append(
-            run_classifier.InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
-  else:
-      for line in lines:
-          text_a = line
-          label = '0'
-          examples.append(
-            run_classifier.InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
-  return examples
 
 BERT_MODEL = 'uncased_L-12_H-768_A-12'
 BERT_PRETRAINED_DIR = f'{folder}/uncased_L-12_H-768_A-12'
@@ -47,7 +36,7 @@ OUTPUT_DIR = f'{folder}/outputs'
 print(f'Model output directory: {OUTPUT_DIR}')
 print(f'BERT pretrained directory: {BERT_PRETRAINED_DIR}')
 
-mbti_data = pd.read_pickle('./../data/training_data_sample_100.pkl')
+mbti_data = pd.read_pickle('./../data/training_data_sample_125_3000.pkl')
 df = pd.DataFrame()
 df["Text"] = mbti_data['comment']
 df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
@@ -55,14 +44,8 @@ df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
 del mbti_data
 
 X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
-                                    df["Label"].values, test_size=0.2, random_state=42)
+                                    df["Label"].values, test_size=0.2, random_state=42, shuffle=True)
 
-TRAIN_BATCH_SIZE = 8
-EVAL_BATCH_SIZE = 4
-LEARNING_RATE = 1e-5
-NUM_TRAIN_EPOCHS = 1.0
-WARMUP_PROPORTION = 0.1
-MAX_SEQ_LENGTH = 100
 # Model configs
 SAVE_CHECKPOINTS_STEPS = 100000 #if you wish to finetune a model on a larger dataset, use larger interval
 # each checpoint weights about 1,5gb
@@ -123,3 +106,25 @@ train_input_fn = run_classifier.input_fn_builder(
     drop_remainder=True)
 estimator.train(input_fn=train_input_fn, max_steps=num_train_steps)
 print('Finished training at {}'.format(datetime.datetime.now()))
+
+#Test the model 
+predict_examples = create_examples(X_test, 'test')
+
+predict_features = run_classifier.convert_examples_to_features(
+    predict_examples, label_list, MAX_SEQ_LENGTH, tokenizer)
+
+predict_input_fn = input_fn_builder(
+    features=predict_features,
+    seq_length=MAX_SEQ_LENGTH,
+    is_training=False,
+    drop_remainder=False)
+
+result = estimator.predict(input_fn=predict_input_fn)
+
+preds = []
+for prediction in result:
+  preds.append(np.argmax(prediction['probabilities']))
+
+print("Accuracy of BERT is:",accuracy_score(y_test,preds))
+print(classification_report(y_test,preds))
+
