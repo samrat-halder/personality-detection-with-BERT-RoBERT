@@ -1,6 +1,10 @@
 #%tensorflow_version 1.11
+from tensorflow.python.util import deprecation
+deprecation._PRINT_DEPRECATION_WARNINGS = False
 
 import pandas as pd
+import os 
+import datetime
 import tensorflow as tf
 import modeling
 import optimization
@@ -12,9 +16,11 @@ import optimization
 import run_classifier
 import tokenization
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+
 
 folder = './../model_folder'
-with zipfile.ZipFile("uncased_L-12_H-768_A-12.zip","r") as zip_ref:
+with zipfile.ZipFile(os.path.join(folder, "uncased_L-12_H-768_A-12.zip"),"r") as zip_ref:
     zip_ref.extractall(folder)
 
 def create_examples(lines, set_type, labels=None):
@@ -38,10 +44,10 @@ def create_examples(lines, set_type, labels=None):
 BERT_MODEL = 'uncased_L-12_H-768_A-12'
 BERT_PRETRAINED_DIR = f'{folder}/uncased_L-12_H-768_A-12'
 OUTPUT_DIR = f'{folder}/outputs'
-print(f'>> Model output directory: {OUTPUT_DIR}')
-print(f'>>  BERT pretrained directory: {BERT_PRETRAINED_DIR}')
+print(f'Model output directory: {OUTPUT_DIR}')
+print(f'BERT pretrained directory: {BERT_PRETRAINED_DIR}')
 
-mbti_data = pd.read_pickle('./../data/training_data.pkl')
+mbti_data = pd.read_pickle('./../data/training_data_sample_100.pkl')
 df = pd.DataFrame()
 df["Text"] = mbti_data['comment']
 df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
@@ -51,8 +57,8 @@ del mbti_data
 X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
                                     df["Label"].values, test_size=0.2, random_state=42)
 
-TRAIN_BATCH_SIZE = 16
-EVAL_BATCH_SIZE = 8
+TRAIN_BATCH_SIZE = 8
+EVAL_BATCH_SIZE = 4
 LEARNING_RATE = 1e-5
 NUM_TRAIN_EPOCHS = 1.0
 WARMUP_PROPORTION = 0.1
@@ -106,14 +112,14 @@ estimator = tf.contrib.tpu.TPUEstimator(
 print('Please wait...')
 train_features = run_classifier.convert_examples_to_features(
     train_examples, label_list, MAX_SEQ_LENGTH, tokenizer)
-print('>> Started training at {} '.format(datetime.datetime.now()))
-print('  Num examples = {}'.format(len(train_examples)))
-print('  Batch size = {}'.format(TRAIN_BATCH_SIZE))
-tf.logging.info("  Num steps = %d", num_train_steps)
+print('Started training at {} '.format(datetime.datetime.now()))
+print('Num examples = {}'.format(len(train_examples)))
+print('Batch size = {}'.format(TRAIN_BATCH_SIZE))
+tf.logging.info("Num steps = %d", num_train_steps)
 train_input_fn = run_classifier.input_fn_builder(
     features=train_features,
     seq_length=MAX_SEQ_LENGTH,
     is_training=True,
     drop_remainder=True)
 estimator.train(input_fn=train_input_fn, max_steps=num_train_steps)
-print('>> Finished training at {}'.format(datetime.datetime.now()))
+print('Finished training at {}'.format(datetime.datetime.now()))
