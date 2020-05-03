@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import nltk
+import modeling
+import optimization
+import run_classifier
 
 def create_examples(lines, set_type, labels=None):
   #Generate data for the BERT model

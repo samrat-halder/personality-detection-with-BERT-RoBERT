@@ -8,10 +8,6 @@ import optimization
 import run_classifier
 import tokenization
 import zipfile
-import modeling
-import optimization
-import run_classifier
-import tokenization
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
@@ -19,12 +15,13 @@ from sklearn.metrics import classification_report
 
 from func import *
 #######################
-TRAIN_BATCH_SIZE = 8
+TRAIN_BATCH_SIZE = 4
 EVAL_BATCH_SIZE = 4
 LEARNING_RATE = 1e-5
 NUM_TRAIN_EPOCHS = 1.0
 WARMUP_PROPORTION = 0.1
-MAX_SEQ_LENGTH = 100
+MAX_SEQ_LENGTH = 150
+NUM_SAMPLE = 5000
 #######################
 folder = './../model_folder'
 with zipfile.ZipFile(os.path.join(folder, "uncased_L-12_H-768_A-12.zip"),"r") as zip_ref:
@@ -36,7 +33,8 @@ OUTPUT_DIR = f'{folder}/outputs'
 print(f'Model output directory: {OUTPUT_DIR}')
 print(f'BERT pretrained directory: {BERT_PRETRAINED_DIR}')
 
-mbti_data = pd.read_pickle('./../data/training_data_sample_125_3000.pkl')
+fname = './../data/training_data_sample_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
+mbti_data = pd.read_pickle(fname)
 df = pd.DataFrame()
 df["Text"] = mbti_data['comment']
 df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])

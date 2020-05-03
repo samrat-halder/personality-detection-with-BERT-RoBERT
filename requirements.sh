@@ -13,4 +13,6 @@ sudo apt-get install python3-pip
 python3 -m pip install pandas
 python3 -m pip install nltk
 python3 -m pip install tensorflow-gpu==1.11
+python3 -m pip install sklearn
+python3 -m pip install spacy
 export PYTHONPATH="${PYTHONPATH}:~/mbti-personality-detection/utils"
