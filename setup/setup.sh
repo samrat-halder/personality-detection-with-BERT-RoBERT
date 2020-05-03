@@ -23,4 +23,5 @@ source ~/.bashrc
 sudo dpkg -i libcudnn7_7.0.5.15–1+cuda9.0_amd64.deb
 sudo dpkg -i libcudnn7-dev_7.0.5.15–1+cuda9.0_amd64.deb
 sudo dpkg -i libcudnn7-doc_7.0.5.15–1+cuda9.0_amd64.deb
-
+sudo apt-get install python3.6-gdbm
+sudo apt-get install htop
