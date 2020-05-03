@@ -1,5 +1,6 @@
 import nltk
 import re
+nltk.download('punkt')
 
 def docSep(row, n=150):
 

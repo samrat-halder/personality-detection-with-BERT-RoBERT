@@ -3,13 +3,12 @@ import os
 import pickle
 from pathlib import Path
 from utils import *
-
-seq_length = 125
-n_sample = 3000
+seq_length = 150
+n_sample = 5000
 
 data_path = '/home/oblivion/mbti-personality-detection/data'
 filename = 'mbti9k_comments.csv'
-split_sent_filename = 'training_data_sample_125_3000.pkl'
+split_sent_filename = 'training_data_sample_' + str(seq_length) + '_' + str(n_sample) + '.pkl'
 mbti_data = pd.read_csv(os.path.join(data_path, filename), nrows=n_sample)
 print('Total number of rows ', len(mbti_data))
 mbti_data = mbti_data.drop_duplicates(subset=['author'], keep='first') #103 authors are duplicated with different types
