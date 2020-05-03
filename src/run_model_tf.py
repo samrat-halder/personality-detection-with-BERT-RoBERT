@@ -12,7 +12,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
-
 from func import *
 #######################
 TRAIN_BATCH_SIZE = 4
@@ -20,15 +19,26 @@ EVAL_BATCH_SIZE = 4
 LEARNING_RATE = 1e-5
 NUM_TRAIN_EPOCHS = 1.0
 WARMUP_PROPORTION = 0.1
-MAX_SEQ_LENGTH = 150
-NUM_SAMPLE = 5000
+MAX_SEQ_LENGTH = 125
+NUM_SAMPLE = 3000
+uncased = False
 #######################
 folder = './../model_folder'
-with zipfile.ZipFile(os.path.join(folder, "uncased_L-12_H-768_A-12.zip"),"r") as zip_ref:
-    zip_ref.extractall(folder)
+if uncased:
+	with zipfile.ZipFile(os.path.join(folder, "uncased_L-12_H-768_A-12.zip"),"r") as zip_ref:
+    		zip_ref.extractall(folder)
 
-BERT_MODEL = 'uncased_L-12_H-768_A-12'
-BERT_PRETRAINED_DIR = f'{folder}/uncased_L-12_H-768_A-12'
+	BERT_MODEL = 'uncased_L-12_H-768_A-12'
+	BERT_PRETRAINED_DIR = f'{folder}/uncased_L-12_H-768_A-12'
+	DO_LOWER_CASE = BERT_MODEL.startswith('uncased')
+else:
+	with zipfile.ZipFile(os.path.join(folder, "cased_L-12_H-768_A-12.zip"),"r") as zip_ref:
+                zip_ref.extractall(folder)
+	BERT_MODEL = 'cased_L-12_H-768_A-12'
+	BERT_PRETRAINED_DIR = f'{folder}/cased_L-12_H-768_A-12'
+	DO_LOWER_CASE = BERT_MODEL.startswith('cased')
+print('BERT model :', BERT_MODEL)
+
 OUTPUT_DIR = f'{folder}/outputs'
 print(f'Model output directory: {OUTPUT_DIR}')
 print(f'BERT pretrained directory: {BERT_PRETRAINED_DIR}')
@@ -52,14 +62,13 @@ NUM_TPU_CORES = 8
 VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
 CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
 INIT_CHECKPOINT = os.path.join(BERT_PRETRAINED_DIR, 'bert_model.ckpt')
-DO_LOWER_CASE = BERT_MODEL.startswith('uncased')
+#DO_LOWER_CASE = BERT_MODEL.startswith('uncased')
 
 label_list = [str(i) for i in sorted(df['Label'].unique())]
-tokenizer = tokenization.FullTokenizer(vocab_file=VOCAB_FILE, do_lower_case=DO_LOWER_CASE)
+tokenizer = tokenization.FullTokenizer(vocab_file=VOCAB_FILE, do_lower_case=DO_LOWER_CASE) #Run end-to-end tokenization
 train_examples = create_examples(X_train, 'train', labels=y_train)
 
 tpu_cluster_resolver = None #Since training will happen on GPU, we won't need a cluster resolver
-#TPUEstimator also supports training on CPU and GPU. You don't need to define a separate tf.estimator.Estimator.
 run_config = tf.contrib.tpu.RunConfig(
     cluster=tpu_cluster_resolver,
     model_dir=OUTPUT_DIR,
