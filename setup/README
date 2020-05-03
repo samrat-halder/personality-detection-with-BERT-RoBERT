@@ -1,0 +1,3 @@
+RUN setup.sh to complete cluster setup
+Go to the cuDNN download page (need registration) and select the latest cuDNN 7.0.* version made for CUDA 9.0.
+Download all 3 .deb files: the runtime library, the developer library, and the code samples library for Ubuntu 16.04 to your home folder
