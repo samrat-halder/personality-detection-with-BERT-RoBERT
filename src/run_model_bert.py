@@ -14,13 +14,13 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from func import *
 #######################
-TRAIN_BATCH_SIZE = 4
+TRAIN_BATCH_SIZE = 8
 EVAL_BATCH_SIZE = 4
 LEARNING_RATE = 1e-5
 NUM_TRAIN_EPOCHS = 1.0
 WARMUP_PROPORTION = 0.1
-MAX_SEQ_LENGTH = 125
-NUM_SAMPLE = 3000
+MAX_SEQ_LENGTH = 150
+NUM_SAMPLE = 2000
 uncased = True #False
 #######################
 folder = './../model_folder'

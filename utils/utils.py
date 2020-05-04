@@ -9,8 +9,6 @@ nlp = English()
 nlp.max_length = 100000000
 nlp.add_pipe(nlp.create_pipe('sentencizer')) # updated
 
-
-
 def docToSent(raw_text):
   
   doc = nlp(raw_text)
@@ -50,3 +48,23 @@ def docSplit(df, cols):
         .apply(lambda x: x.str.split('|').explode())
         .reset_index())
     return df
+
+def overlappingSplit(row, n=150, n_overlap=25):
+  
+  text = row['comment']
+  text = textClean(text)
+  l_total = []
+  l_partial = []
+  if len(text.split())//n >0:
+    n = len(text.split())//n
+  else: 
+    n = 1
+  for w in range(n):
+    if w == 0:
+      l_partial = text.split()[:(n+n_overlap)]
+      l_total.append(" ".join(l_partial))
+    else:
+      l_partial = text.split()[w*n:w*n + (n+n_overlap)]
+      l_total.append(" ".join(l_partial))
+  
+  return '|'.join(l_total)
