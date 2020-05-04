@@ -1,6 +1,22 @@
+from __future__ import unicode_literals, print_function
 import nltk
 import re
 nltk.download('punkt')
+from spacy.lang.en import English # updated
+
+#raw_text = 'Hello, world. Here are two sentences.'
+nlp = English()
+nlp.max_length = 100000000
+nlp.add_pipe(nlp.create_pipe('sentencizer')) # updated
+
+
+
+def docToSent(raw_text):
+  
+  doc = nlp(raw_text)
+  sentences = [sent.string.strip() for sent in doc.sents]
+  
+  return len(sentences)
 
 def docSep(row, n=150):
 
