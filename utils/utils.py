@@ -3,6 +3,7 @@ import nltk
 import re
 nltk.download('punkt')
 from spacy.lang.en import English # updated
+import pandas as pd
 
 #raw_text = 'Hello, world. Here are two sentences.'
 nlp = English()
