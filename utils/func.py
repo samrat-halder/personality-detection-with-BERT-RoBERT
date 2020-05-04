@@ -4,6 +4,7 @@ import nltk
 import modeling
 import optimization
 import run_classifier
+import tensorflow as tf
 
 def create_examples(lines, set_type, labels=None):
   #Generate data for the BERT model
