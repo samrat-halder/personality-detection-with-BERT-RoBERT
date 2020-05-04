@@ -44,16 +44,15 @@ print('======================================================')
 mbti_data_1 = copy.deepcopy(mbti_data)
 print('Splitting comments for heirerchical model by sequence length ', seq_length, ' overlapping length ', overlap_length)
 mbti_data_1['comment'] = mbti_data_1.apply(lambda x: overlappingSplit(x, n=seq_length, n_overlap=overlap_length), axis=1)
-mbti_data_1_1 = splitDfWithIndex(mbti_data_1)
-del mbti_data_1
-mbti_data_1_1.to_pickle(os.path.join(data_path, split_sent_filename_2))
-
+mbti_data_1['index'] = mbti_data_1.index
+mbti_data_1 = docSplit(mbti_data, ['author','type','index'])
+mbti_data_1 = mbti_data[mbti_data['comment'] != -1].reset_index(drop=True)
 print("Done..!")
-print('======================================================')
 print('Class distribution after splitting:')
 print(mbti_data_1_1.type.value_counts())
 print('Total number of rows after splitting douments ', len(mbti_data_1))
-mbti_data_1_1.to_pickle(os.path.join(data_path, split_sent_filename_2))
+mbti_data_1.to_pickle(os.path.join(data_path, split_sent_filename_2))
+print('======================================================')
 
 
 print('Splitting comments by sequence length ', seq_length)

@@ -68,7 +68,7 @@ def overlappingSplit(row, n=150, n_overlap=25):
       l_partial = text.split()[w*n:w*n + (n+n_overlap)]
       l_total.append(" ".join(l_partial))
   
-  return l_total
+  return '|'.join(l_total)
 
 def splitDfWithIndex(df):
 
