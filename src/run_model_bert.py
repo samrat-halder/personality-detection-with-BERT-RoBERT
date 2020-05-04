@@ -21,9 +21,14 @@ NUM_TRAIN_EPOCHS = 1.0
 WARMUP_PROPORTION = 0.1
 MAX_SEQ_LENGTH = 125
 NUM_SAMPLE = 3000
-uncased = False
+uncased = True #False
 #######################
 folder = './../model_folder'
+# Model configs
+SAVE_CHECKPOINTS_STEPS = 100000 #if you wish to finetune a model on a larger dataset, use larger interval
+# each checpoint weights about 1,5gb
+ITERATIONS_PER_LOOP = 100000
+NUM_TPU_CORES = 8
 if uncased:
 	with zipfile.ZipFile(os.path.join(folder, "uncased_L-12_H-768_A-12.zip"),"r") as zip_ref:
     		zip_ref.extractall(folder)
@@ -37,6 +42,11 @@ else:
 	BERT_MODEL = 'cased_L-12_H-768_A-12'
 	BERT_PRETRAINED_DIR = f'{folder}/cased_L-12_H-768_A-12'
 	DO_LOWER_CASE = BERT_MODEL.startswith('cased')
+
+VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
+CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
+INIT_CHECKPOINT = os.path.join(BERT_PRETRAINED_DIR, 'bert_model.ckpt')
+DO_LOWER_CASE = BERT_MODEL.startswith('uncased')
 print('BERT model :', BERT_MODEL)
 
 OUTPUT_DIR = f'{folder}/outputs'
@@ -53,20 +63,13 @@ del mbti_data
 
 X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
                                     df["Label"].values, test_size=0.2, random_state=42, shuffle=True)
-
-# Model configs
-SAVE_CHECKPOINTS_STEPS = 100000 #if you wish to finetune a model on a larger dataset, use larger interval
-# each checpoint weights about 1,5gb
-ITERATIONS_PER_LOOP = 100000
-NUM_TPU_CORES = 8
-VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
-CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
-INIT_CHECKPOINT = os.path.join(BERT_PRETRAINED_DIR, 'bert_model.ckpt')
-#DO_LOWER_CASE = BERT_MODEL.startswith('uncased')
-
 label_list = [str(i) for i in sorted(df['Label'].unique())]
-tokenizer = tokenization.FullTokenizer(vocab_file=VOCAB_FILE, do_lower_case=DO_LOWER_CASE) #Run end-to-end tokenization
 train_examples = create_examples(X_train, 'train', labels=y_train)
+predict_examples = create_examples(X_test, 'test')
+
+num_train_steps = int(
+    len(train_examples) / TRAIN_BATCH_SIZE * NUM_TRAIN_EPOCHS)
+num_warmup_steps = int(num_train_steps * WARMUP_PROPORTION)
 
 tpu_cluster_resolver = None #Since training will happen on GPU, we won't need a cluster resolver
 run_config = tf.contrib.tpu.RunConfig(
@@ -77,10 +80,6 @@ run_config = tf.contrib.tpu.RunConfig(
         iterations_per_loop=ITERATIONS_PER_LOOP,
         num_shards=NUM_TPU_CORES,
         per_host_input_for_training=tf.contrib.tpu.InputPipelineConfig.PER_HOST_V2))
-
-num_train_steps = int(
-    len(train_examples) / TRAIN_BATCH_SIZE * NUM_TRAIN_EPOCHS)
-num_warmup_steps = int(num_train_steps * WARMUP_PROPORTION)
 
 model_fn = run_classifier.model_fn_builder(
     bert_config=modeling.BertConfig.from_json_file(CONFIG_FILE),
@@ -98,7 +97,9 @@ estimator = tf.contrib.tpu.TPUEstimator(
     config=run_config,
     train_batch_size=TRAIN_BATCH_SIZE,
     eval_batch_size=EVAL_BATCH_SIZE)
+tokenizer = tokenization.FullTokenizer(vocab_file=VOCAB_FILE, do_lower_case=DO_LOWER_CASE) #Run end-to-end tokenization
 
+#Train the model
 print('Please wait...')
 train_features = run_classifier.convert_examples_to_features(
     train_examples, label_list, MAX_SEQ_LENGTH, tokenizer)
@@ -106,6 +107,7 @@ print('Started training at {} '.format(datetime.datetime.now()))
 print('Num examples = {}'.format(len(train_examples)))
 print('Batch size = {}'.format(TRAIN_BATCH_SIZE))
 tf.logging.info("Num steps = %d", num_train_steps)
+
 train_input_fn = run_classifier.input_fn_builder(
     features=train_features,
     seq_length=MAX_SEQ_LENGTH,
@@ -115,8 +117,6 @@ estimator.train(input_fn=train_input_fn, max_steps=num_train_steps)
 print('Finished training at {}'.format(datetime.datetime.now()))
 
 #Test the model 
-predict_examples = create_examples(X_test, 'test')
-
 predict_features = run_classifier.convert_examples_to_features(
     predict_examples, label_list, MAX_SEQ_LENGTH, tokenizer)
 
