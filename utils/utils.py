@@ -67,4 +67,19 @@ def overlappingSplit(row, n=150, n_overlap=25):
       l_partial = text.split()[w*n:w*n + (n+n_overlap)]
       l_total.append(" ".join(l_partial))
   
-  return '|'.join(l_total)
+  return l_total
+
+def splitDfWithIndex(df):
+
+  text_l = []
+  label_l = []
+  index_l =[]
+  for idx,row in df.iterrows():
+    for l in row['comment']:
+      text_l.append(l)
+      label_l.append(row['type'])
+      index_l.append(idx)
+  #len(train_l), len(label_l), len(index_l)
+  df_new = pd.DataFrame({'comment':df_l, 'type':label_l, 'index':index_l})
+  return df_new
+
