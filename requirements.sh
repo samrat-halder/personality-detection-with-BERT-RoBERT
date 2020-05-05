@@ -1,7 +1,7 @@
 #mkdir model_folder
 mkdir -p data
 cd model_folder
-#wget https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip
+wget https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip
 wget https://storage.googleapis.com/bert_models/2018_10_18/cased_L-12_H-768_A-12.zip
 #wget https://raw.githubusercontent.com/google-research/bert/master/modeling.py
 #wget https://raw.githubusercontent.com/google-research/bert/master/optimization.py
