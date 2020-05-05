@@ -72,3 +72,29 @@ def input_fn_builder(features, seq_length, is_training, drop_remainder):
     return d
 
   return input_fn
+
+def get_prediction(in_sentences, predictions, type_output = "features"):
+  #list to map the actual labels to the predictions
+  labels = np.unique(train['label'])
+  if type_output == "features":
+    return [prediction['pooled_output'] for _,prediction in enumerate(predictions) ]
+  else:
+    return ([(sentence, prediction['probabilities'],
+              prediction['labels'], labels[prediction['labels']]) for sentence, prediction in zip(in_sentences, predictions)])
+
+#Genrator training data for RoBERT
+def lstm_generator(df):
+    x_list= df['emb'].to_list()
+    y_list =  df.label.to_list()
+    # Generate batches
+    while True:
+        for b in range(batches_per_epoch):
+            longest_index = (b + 1) * batch_size - 1
+            timesteps = len(max(df['emb'].to_list()[:(b + 1) * batch_size][-batch_size:], key=len))
+            x_train = np.full((batch_size, timesteps, num_features), -99.)
+            y_train = np.zeros((batch_size,  1))
+            for i in range(batch_size):
+                li = b * batch_size + i
+                x_train[i, 0:len(x_list[li]), :] = x_list[li]
+                y_train[i] = y_list[li]
+            yield x_train, y_train
