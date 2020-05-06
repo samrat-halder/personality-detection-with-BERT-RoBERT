@@ -2,6 +2,9 @@
 import pandas as pd
 import os 
 import datetime
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
+os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '1'
+logging.getLogger("tensorflow").setLevel(logging.WARNING)
 import tensorflow as tf
 import modeling
 import optimization
@@ -61,7 +64,7 @@ df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
 del mbti_data
 
 X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
-                                    df["Label"].values, test_size=0.5, random_state=42, shuffle=True)
+                                    df["Label"].values, test_size=0.8, random_state=42, shuffle=True)
 #Preprocess data for BERT
 label_list = [str(i) for i in sorted(df['Label'].unique())]
 train_examples = create_examples(X_train, 'train', labels=y_train)
