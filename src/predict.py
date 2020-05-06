@@ -80,14 +80,16 @@ df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
 del mbti_data
 
 X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
-                                    df["Label"].values, test_size=0.1, random_state=42, shuffle=True)
+                                    df["Label"].values, test_size=0.5, random_state=42, shuffle=True)
 
-print('Length of test set:', len(X_test),  ', ', len(y_test)) 
+print('Length of test set:', len(X_test))
+print('\n_______________\nValue counts for labels :\n', df['Label'].value_counts())
 #Preprocess data for BERT
 label_list = [str(i) for i in sorted(df['Label'].unique())]
 #train_examples = create_examples(X_train, 'train', labels=y_train)
-predict_examples = create_examples(X_test, 'test')
 
+#Build pipeline for applying BERT
+predict_examples = create_examples(X_test, 'test')
 tokenizer = tokenization.FullTokenizer(vocab_file=VOCAB_FILE, do_lower_case=DO_LOWER_CASE) #Run end-to-end tokenization
 
 num_train_steps = int(
@@ -122,6 +124,7 @@ estimator = tf.contrib.tpu.TPUEstimator(
     eval_batch_size=EVAL_BATCH_SIZE)
 
 #Test the model 
+print('\n_______________\nPreparing BERT features...')
 predict_features = run_classifier.convert_examples_to_features(
     predict_examples, label_list, MAX_SEQ_LENGTH, tokenizer)
 
@@ -129,7 +132,7 @@ predict_input_fn = input_fn_builder(
     features=predict_features,
     seq_length=MAX_SEQ_LENGTH,
     is_training=False,
-    drop_remainder=True)
+    drop_remainder=False) #if True will drop remainder of the batch
 
 result = estimator.predict(input_fn=predict_input_fn)
 
@@ -139,3 +142,30 @@ for prediction in result:
 
 print("\n__________\nAccuracy of BERT is:",accuracy_score(y_test,preds))
 print(classification_report(y_test,preds))
+
+
+
+#Load Heirechical data
+fname_h = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
+mbti_data_h = pd.read_pickle(fname_h)
+df_h = pd.DataFrame()
+df_h["Text"] = mbti_data_h['comment']
+df_h["Label"] = LabelEncoder().fit_transform(mbti_data_h['type'])
+index_l = mbti_data_h['index'].tolist()
+df_emb = np.apply_along_axis(getPrediction, 0,np.array(df_h['Text']))
+
+X = {}
+for l, emb in zip(index_l, df_emb):
+  if l in X.keys():
+    X[l]  =np.vstack([X[l], emb])
+  else:
+    X[l] = [emb]
+
+emb_final = []
+label_final = []
+for k in X.keys():
+  emb_final.append(train_x[k])
+  label_l_final.append(train.loc[k]['label'])
+
+df_train = pd.DataFrame({'emb': train_l_final, 'label': label_l_final, })
+df_train.head()

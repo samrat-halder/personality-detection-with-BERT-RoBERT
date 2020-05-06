@@ -68,7 +68,6 @@ X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
 #Preprocess data for BERT
 label_list = [str(i) for i in sorted(df['Label'].unique())]
 train_examples = create_examples(X_train, 'train', labels=y_train)
-predict_examples = create_examples(X_test, 'test')
 print("\n__________\nRow 0 - guid of training set : ", train_examples[0].guid)
 print("\n__________\nRow 0 - text_a of training set : ", train_examples[0].text_a)
 print("\n__________\nRow 0 - text_b of training set : ", train_examples[0].text_b)
@@ -129,22 +128,3 @@ train_input_fn = run_classifier.input_fn_builder(
     drop_remainder=True)
 estimator.train(input_fn=train_input_fn, max_steps=num_train_steps)
 print('\n__________\nFinished training at {}'.format(datetime.datetime.now()))
-
-#Test the model 
-predict_features = run_classifier.convert_examples_to_features(
-    predict_examples, label_list, MAX_SEQ_LENGTH, tokenizer)
-
-predict_input_fn = input_fn_builder(
-    features=predict_features,
-    seq_length=MAX_SEQ_LENGTH,
-    is_training=False,
-    drop_remainder=False)
-
-result = estimator.predict(input_fn=predict_input_fn)
-
-preds = []
-for prediction in result:
-  preds.append(np.argmax(prediction['probabilities']))
-
-print("\n__________\nAccuracy of BERT is:",accuracy_score(y_test,preds))
-print(classification_report(y_test,preds))
