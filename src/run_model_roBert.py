@@ -1,9 +1,6 @@
 from keras import layers
 from keras.callbacks import ReduceLROnPlateau
-
-
-
-
+from func import *
 text_input = Input(shape=(None,768,), dtype='float32', name='text')
 
 l_mask = layers.Masking(mask_value=-99.)(text_input)
