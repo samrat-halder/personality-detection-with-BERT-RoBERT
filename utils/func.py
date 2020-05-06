@@ -82,19 +82,33 @@ def get_prediction(in_sentences, predictions, type_output = "features"):
     return ([(sentence, prediction['probabilities'],
               prediction['labels'], labels[prediction['labels']]) for sentence, prediction in zip(in_sentences, predictions)])
 
-#Genrator training data for RoBERT
+def serving_input_receiver_fn():
+  feature_spec = {
+    "unique_ids": tf.FixedLenFeature([], tf.int64),
+    "input_ids": tf.FixedLenFeature([max_seq_length], tf.int64),
+    "input_mask": tf.FixedLenFeature([max_seq_length], tf.int64),
+    "segment_ids": tf.FixedLenFeature([max_seq_length], tf.int64),
+  }
+
+  serialized_tf_example = tf.placeholder(dtype=tf.string,
+                                         shape=[batch_size],
+                                         name='input_example_tensor')
+  receiver_tensors = {'examples': serialized_tf_example}
+  features = tf.parse_example(serialized_tf_example, feature_spec)
+  return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
+
 def lstm_generator(df):
-    x_list= df['emb'].to_list()
-    y_list =  df.label.to_list()
-    # Generate batches
-    while True:
-        for b in range(batches_per_epoch):
-            longest_index = (b + 1) * batch_size - 1
-            timesteps = len(max(df['emb'].to_list()[:(b + 1) * batch_size][-batch_size:], key=len))
-            x_train = np.full((batch_size, timesteps, num_features), -99.)
-            y_train = np.zeros((batch_size,  1))
-            for i in range(batch_size):
-                li = b * batch_size + i
-                x_train[i, 0:len(x_list[li]), :] = x_list[li]
-                y_train[i] = y_list[li]
-            yield x_train, y_train
+  x_list= df['emb'].to_list()
+  y_list =  df.label.to_list()
+  # Generate batches
+  while True:
+    for b in range(batches_per_epoch):
+      longest_index = (b + 1) * batch_size - 1
+      timesteps = len(max(df['emb'].to_list()[:(b + 1) * batch_size][-batch_size:], key=len))
+      x_train = np.full((batch_size, timesteps, num_features), -99.)
+      y_train = np.zeros((batch_size,  1))
+      for i in range(batch_size):
+        li = b * batch_size + i
+        x_train[i, 0:len(x_list[li]), :] = x_list[li]
+        y_train[i] = y_list[li]
+      yield x_train, y_train

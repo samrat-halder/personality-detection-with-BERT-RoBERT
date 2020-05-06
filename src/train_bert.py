@@ -14,13 +14,13 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from func import *
 #######################
-TRAIN_BATCH_SIZE = 8
-EVAL_BATCH_SIZE = 4
+TRAIN_BATCH_SIZE = 4
+EVAL_BATCH_SIZE = 2
 LEARNING_RATE = 1e-5
 NUM_TRAIN_EPOCHS = 1.0
 WARMUP_PROPORTION = 0.1
 MAX_SEQ_LENGTH = 150
-NUM_SAMPLE = 2000
+NUM_SAMPLE = 1500
 uncased = True #False
 #######################
 folder = './../model_folder'
@@ -43,11 +43,10 @@ else:
 	BERT_PRETRAINED_DIR = f'{folder}/cased_L-12_H-768_A-12'
 	DO_LOWER_CASE = BERT_MODEL.startswith('cased')
 
+print('BERT model :', BERT_MODEL)
 VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
 CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
 INIT_CHECKPOINT = os.path.join(BERT_PRETRAINED_DIR, 'bert_model.ckpt')
-DO_LOWER_CASE = BERT_MODEL.startswith('uncased')
-print('BERT model :', BERT_MODEL)
 
 OUTPUT_DIR = f'{folder}/outputs'
 print(f'Model output directory: {OUTPUT_DIR}')
@@ -62,7 +61,7 @@ df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
 del mbti_data
 
 X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
-                                    df["Label"].values, test_size=0.2, random_state=42, shuffle=True)
+                                    df["Label"].values, test_size=0.5, random_state=42, shuffle=True)
 #Preprocess data for BERT
 label_list = [str(i) for i in sorted(df['Label'].unique())]
 train_examples = create_examples(X_train, 'train', labels=y_train)
@@ -146,4 +145,3 @@ for prediction in result:
 
 print("\n__________\nAccuracy of BERT is:",accuracy_score(y_test,preds))
 print(classification_report(y_test,preds))
-
