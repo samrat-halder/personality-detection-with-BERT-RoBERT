@@ -71,10 +71,13 @@ print('BERT model :', BERT_MODEL)
 
 VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
 CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
-INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-42181')
+INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-16872')
 
 fname = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
 mbti_data = pd.read_pickle(fname)
+####
+mbti_data = mbti_data[:10000]
+####
 df = pd.DataFrame()
 df["Text"] = mbti_data['comment']
 df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
@@ -87,7 +90,7 @@ if FLAG != 'H':
                                     df["Label"].values, test_size=0.5, random_state=42, shuffle=True)
   predict_examples = create_examples(X_test, 'test')
   print('Length of test set:', len(X_test))
-  print('\n_______________\nValue counts for labels :\n', y_test.value_counts())
+  #print('\n_______________\nValue counts for labels :\n', y_test.value_counts())
 else:
   predict_examples = create_examples(df['Text'], 'test')
   print('\n_______________\nLength of test set:', len(df))
@@ -148,8 +151,8 @@ if FLAG != 'H':
   for prediction in result:
     preds.append(np.argmax(prediction['probabilities']))
 
-print("\n__________\nAccuracy of BERT is:",accuracy_score(y_test,preds))
-print(classification_report(y_test,preds))
+  print("\n__________\nAccuracy of BERT is:",accuracy_score(y_test,preds))
+  print(classification_report(y_test,preds))
 else:
   #Load Heirechical data
   df_emb = get_embedding(result)
@@ -164,8 +167,9 @@ else:
   emb_final = []
   label_final = []
   for k in X.keys():
-    emb_final.append(train_x[k])
-    label_l_final.append(train.loc[k]['label'])
+    emb_final.append(X[k])
+    label_final.append(df.loc[k]['Label'])
 
-  df_train = pd.DataFrame({'emb': train_l_final, 'label': label_l_final, })
-  #df_train.head()
+  df_train = pd.DataFrame({'emb': emb_final, 'label': label_final})
+  df_train.to_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl')
+  print("\n__________\nEmbeddings saved to data folder.')

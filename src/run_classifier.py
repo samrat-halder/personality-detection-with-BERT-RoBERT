@@ -571,7 +571,7 @@ def _truncate_seq_pair(tokens_a, tokens_b, max_length):
       tokens_b.pop()
 
 
-def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
+def create_model(bert_config, is_training, is_predicting, input_ids, input_mask, segment_ids,
                  labels, num_labels, use_one_hot_embeddings):
   """Creates a classification model."""
   model = modeling.BertModel(
@@ -607,7 +607,10 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
     logits = tf.nn.bias_add(logits, output_bias)
     probabilities = tf.nn.softmax(logits, axis=-1)
     log_probs = tf.nn.log_softmax(logits, axis=-1)
-
+    #ADD
+    if is_predicting:
+      return (probabilities, output_layer)
+    #
     one_hot_labels = tf.one_hot(labels, depth=num_labels, dtype=tf.float32)
 
     per_example_loss = -tf.reduce_sum(one_hot_labels * log_probs, axis=-1)
@@ -639,9 +642,20 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
       is_real_example = tf.ones(tf.shape(label_ids), dtype=tf.float32)
 
     is_training = (mode == tf.estimator.ModeKeys.TRAIN)
-
+    #ADD
+    is_predicting = (mode == tf.estimator.ModeKeys.PREDICT)
+    if is_predicting:
+       (probabilities, pooled_layer) = create_model(
+        bert_config, is_training, is_predicting, input_ids, input_mask, segment_ids, label_ids,
+        num_labels, use_one_hot_embeddings)
+       predictions = {
+          'probabilities': probabilities,
+          'pooled_output': pooled_layer
+          }
+       return tf.estimator.EstimatorSpec(mode, predictions=predictions)
+    #####
     (total_loss, per_example_loss, logits, probabilities) = create_model(
-        bert_config, is_training, input_ids, input_mask, segment_ids, label_ids,
+        bert_config, is_training,is_predicting,  input_ids, input_mask, segment_ids, label_ids,
         num_labels, use_one_hot_embeddings)
 
     tvars = tf.trainable_variables()
