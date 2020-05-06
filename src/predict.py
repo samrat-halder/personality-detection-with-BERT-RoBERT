@@ -19,6 +19,7 @@ from sklearn.metrics import classification_report
 from func import *
 folder = './../model_folder'
 
+FLAG = 'H'
 TRAIN_BATCH_SIZE = 4
 EVAL_BATCH_SIZE = 2
 LEARNING_RATE = 1e-5
@@ -37,6 +38,7 @@ ITERATIONS_PER_LOOP = 100000
 NUM_TPU_CORES = 8
 
 """
+#Can be use to export the BERT trained model to a smaller version
 #path to output the new optimized model
 output_path = os.path.join(OUTPUT_DIR, 'optimized_model')
 
@@ -71,27 +73,32 @@ VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
 CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
 INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-42181')
 
-fname = './../data/training_data_sample_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
+fname = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
 mbti_data = pd.read_pickle(fname)
 df = pd.DataFrame()
 df["Text"] = mbti_data['comment']
 df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
-
+index_l = mbti_data['index'].tolist()
+print('\n_______________\nValue counts for labels :\n', df['Label'].value_counts())
 del mbti_data
 
-X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
+if FLAG != 'H':
+  X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
                                     df["Label"].values, test_size=0.5, random_state=42, shuffle=True)
-
-print('Length of test set:', len(X_test))
-print('\n_______________\nValue counts for labels :\n', df['Label'].value_counts())
+  predict_examples = create_examples(X_test, 'test')
+  print('Length of test set:', len(X_test))
+  print('\n_______________\nValue counts for labels :\n', y_test.value_counts())
+else:
+  predict_examples = create_examples(df['Text'], 'test')
+  print('\n_______________\nLength of test set:', len(df))
+  X_train = df #For num _train_steps parameter
+	
 #Preprocess data for BERT
 label_list = [str(i) for i in sorted(df['Label'].unique())]
 #train_examples = create_examples(X_train, 'train', labels=y_train)
 
 #Build pipeline for applying BERT
-predict_examples = create_examples(X_test, 'test')
 tokenizer = tokenization.FullTokenizer(vocab_file=VOCAB_FILE, do_lower_case=DO_LOWER_CASE) #Run end-to-end tokenization
-
 num_train_steps = int(
     len(X_train) / TRAIN_BATCH_SIZE * NUM_TRAIN_EPOCHS)
 num_warmup_steps = int(num_train_steps * WARMUP_PROPORTION)
@@ -136,36 +143,29 @@ predict_input_fn = input_fn_builder(
 
 result = estimator.predict(input_fn=predict_input_fn)
 
-preds = []
-for prediction in result:
-  preds.append(np.argmax(prediction['probabilities']))
+if FLAG != 'H':
+  preds = []
+  for prediction in result:
+    preds.append(np.argmax(prediction['probabilities']))
 
 print("\n__________\nAccuracy of BERT is:",accuracy_score(y_test,preds))
 print(classification_report(y_test,preds))
+else:
+  #Load Heirechical data
+  df_emb = get_embedding(result)
 
+  X = {}
+  for l, emb in zip(index_l, df_emb):
+    if l in X.keys():
+      X[l]  =np.vstack([X[l], emb])
+    else:
+      X[l] = [emb]
 
+  emb_final = []
+  label_final = []
+  for k in X.keys():
+    emb_final.append(train_x[k])
+    label_l_final.append(train.loc[k]['label'])
 
-#Load Heirechical data
-fname_h = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
-mbti_data_h = pd.read_pickle(fname_h)
-df_h = pd.DataFrame()
-df_h["Text"] = mbti_data_h['comment']
-df_h["Label"] = LabelEncoder().fit_transform(mbti_data_h['type'])
-index_l = mbti_data_h['index'].tolist()
-df_emb = np.apply_along_axis(getPrediction, 0,np.array(df_h['Text']))
-
-X = {}
-for l, emb in zip(index_l, df_emb):
-  if l in X.keys():
-    X[l]  =np.vstack([X[l], emb])
-  else:
-    X[l] = [emb]
-
-emb_final = []
-label_final = []
-for k in X.keys():
-  emb_final.append(train_x[k])
-  label_l_final.append(train.loc[k]['label'])
-
-df_train = pd.DataFrame({'emb': train_l_final, 'label': label_l_final, })
-df_train.head()
+  df_train = pd.DataFrame({'emb': train_l_final, 'label': label_l_final, })
+  #df_train.head()

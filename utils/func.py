@@ -73,14 +73,10 @@ def input_fn_builder(features, seq_length, is_training, drop_remainder):
 
   return input_fn
 
-def get_prediction(in_sentences, predictions, type_output = "features"):
+def get_embedding(predictions):
   #list to map the actual labels to the predictions
-  labels = np.unique(train['label'])
-  if type_output == "features":
-    return [prediction['pooled_output'] for _,prediction in enumerate(predictions) ]
-  else:
-    return ([(sentence, prediction['probabilities'],
-              prediction['labels'], labels[prediction['labels']]) for sentence, prediction in zip(in_sentences, predictions)])
+  return [prediction['pooled_output'] for _,prediction in enumerate(predictions)]
+
 
 def serving_input_receiver_fn():
   feature_spec = {
