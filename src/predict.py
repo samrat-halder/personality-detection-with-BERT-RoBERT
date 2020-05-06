@@ -1,6 +1,11 @@
 import pandas as pd
 import os
 import datetime
+import logging
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
+os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '0'
+logging.getLogger("tensorflow").setLevel(logging.WARNING)
+
 import tensorflow as tf
 import modeling
 import optimization
@@ -64,7 +69,7 @@ print('BERT model :', BERT_MODEL)
 
 VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
 CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
-INIT_CHECKPOINT = os.path.join(BERT_PRETRAINED_DIR, 'bert_model.ckpt')
+INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-42181')
 
 fname = './../data/training_data_sample_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
 mbti_data = pd.read_pickle(fname)
@@ -75,17 +80,18 @@ df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
 del mbti_data
 
 X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
-                                    df["Label"].values, test_size=0.8, random_state=42, shuffle=True)
+                                    df["Label"].values, test_size=0.1, random_state=42, shuffle=True)
+
+print('Length of test set:', len(X_test),  ', ', len(y_test)) 
 #Preprocess data for BERT
 label_list = [str(i) for i in sorted(df['Label'].unique())]
-train_examples = create_examples(X_train, 'train', labels=y_train)
+#train_examples = create_examples(X_train, 'train', labels=y_train)
 predict_examples = create_examples(X_test, 'test')
-
 
 tokenizer = tokenization.FullTokenizer(vocab_file=VOCAB_FILE, do_lower_case=DO_LOWER_CASE) #Run end-to-end tokenization
 
 num_train_steps = int(
-    len(train_examples) / TRAIN_BATCH_SIZE * NUM_TRAIN_EPOCHS)
+    len(X_train) / TRAIN_BATCH_SIZE * NUM_TRAIN_EPOCHS)
 num_warmup_steps = int(num_train_steps * WARMUP_PROPORTION)
 
 tpu_cluster_resolver = None
@@ -115,8 +121,6 @@ estimator = tf.contrib.tpu.TPUEstimator(
     train_batch_size=TRAIN_BATCH_SIZE,
     eval_batch_size=EVAL_BATCH_SIZE)
 
-
-
 #Test the model 
 predict_features = run_classifier.convert_examples_to_features(
     predict_examples, label_list, MAX_SEQ_LENGTH, tokenizer)
@@ -127,7 +131,6 @@ predict_input_fn = input_fn_builder(
     is_training=False,
     drop_remainder=True)
 
-print('done')
 result = estimator.predict(input_fn=predict_input_fn)
 
 preds = []
