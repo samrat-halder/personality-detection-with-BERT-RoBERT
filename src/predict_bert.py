@@ -71,12 +71,12 @@ print('BERT model :', BERT_MODEL)
 
 VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
 CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
-INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-16872')
+INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-42181')
 
 fname = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
 mbti_data = pd.read_pickle(fname)
 ####
-mbti_data = mbti_data[:10000]
+#mbti_data = mbti_data[:10000]
 ####
 df = pd.DataFrame()
 df["Text"] = mbti_data['comment']
@@ -87,7 +87,7 @@ del mbti_data
 
 if FLAG != 'H':
   X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
-                                    df["Label"].values, test_size=0.5, random_state=42, shuffle=True)
+                                    df["Label"].values, test_size=0.3, random_state=42, shuffle=True)
   predict_examples = create_examples(X_test, 'test')
   print('Length of test set:', len(X_test))
   #print('\n_______________\nValue counts for labels :\n', y_test.value_counts())
@@ -172,4 +172,4 @@ else:
 
   df_train = pd.DataFrame({'emb': emb_final, 'label': label_final})
   df_train.to_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl')
-  print("\n__________\nEmbeddings saved to data folder.')
+  print("\n__________\nEmbeddings saved to data folder.")

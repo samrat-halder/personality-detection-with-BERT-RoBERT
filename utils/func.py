@@ -93,7 +93,8 @@ def serving_input_receiver_fn():
   features = tf.parse_example(serialized_tf_example, feature_spec)
   return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
 
-def lstm_generator(df):
+def lstm_generator(df, batches_per_epoch, batch_size,
+                   num_features):
   x_list= df['emb'].to_list()
   y_list =  df.label.to_list()
   # Generate batches
