@@ -7,6 +7,7 @@ from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Embedding, Dense, Input, concatenate, Layer, Lambda, Dropout, Activation
 from sklearn.model_selection import train_test_split
 from func import *
+
 MAX_SEQ_LENGTH = 150
 NUM_SAMPLE = 1500 
 
@@ -14,11 +15,20 @@ emb_data = pd.read_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH
 label_list = emb_data['label'].unique().tolist()
 df_train_val, df_test = train_test_split(emb_data, test_size=0.2, random_state=35)
 df_train, df_val = train_test_split(df_train_val, test_size=0.2, random_state=35)
+
 batch_size_train = 3
 batches_per_epoch_train = len(df_train) // batch_size_train
-num_features_train = num_features_val = num_features_test = 768 #BERT output embedding size
+df_train = df_train[:batch_size_train*batches_per_epoch_train] #Fixing dimension to nearest batch
+
 batch_size_val = 5
 batches_per_epoch_val = len(df_val) // batch_size_train
+df_val = df_val[:batch_size_val*batches_per_epoch_val]
+
+batch_size_test = 5
+batches_per_epoch_test = len(df_test) // batch_size_train
+df_test = df_test[:batch_size_test*batches_per_epoch_test]
+
+num_features_train = num_features_val = num_features_test = 768 #BERT output embedding size
 
 text_input = Input(shape=(None,768,), dtype='float32', name='text')
 l_mask = layers.Masking(mask_value=-99.)(text_input)

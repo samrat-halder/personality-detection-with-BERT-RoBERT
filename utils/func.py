@@ -96,7 +96,7 @@ def serving_input_receiver_fn():
 def lstm_generator(df, batches_per_epoch, batch_size,
                    num_features):
   x_list= df['emb'].to_list()
-  y_list =  df.label.to_list()
+  y_list =  df['label'].to_list()
   # Generate batches
   while True:
     for b in range(batches_per_epoch):
