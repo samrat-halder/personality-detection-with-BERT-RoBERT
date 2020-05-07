@@ -16,9 +16,10 @@ label_list = emb_data['label'].unique().tolist()
 df_train_val, df_test = train_test_split(emb_data, test_size=0.2, random_state=35)
 df_train, df_val = train_test_split(df_train_val, test_size=0.2, random_state=35)
 
-batch_size_train = 3
+batch_size_train = 10
 batches_per_epoch_train = len(df_train) // batch_size_train
 df_train = df_train[:batch_size_train*batches_per_epoch_train] #Fixing dimension to nearest batch
+assert len(df_train) == batches_per_epoch_train * batch_size_train
 
 batch_size_val = 5
 batches_per_epoch_val = len(df_val) // batch_size_train
@@ -28,7 +29,7 @@ batch_size_test = 5
 batches_per_epoch_test = len(df_test) // batch_size_train
 df_test = df_test[:batch_size_test*batches_per_epoch_test]
 
-num_features_train = num_features_val = num_features_test = 768 #BERT output embedding size
+num_features= 768 #BERT output embedding size
 
 text_input = Input(shape=(None,768,), dtype='float32', name='text')
 l_mask = layers.Masking(mask_value=-99.)(text_input)
@@ -46,10 +47,10 @@ model.summary()
 call_reduce = ReduceLROnPlateau(monitor='val_acc', factor=0.95, patience=3, verbose=2,
                                 mode='auto', min_delta=0.01, cooldown=0, min_lr=0)
 model.fit_generator(lstm_generator(df_train, batches_per_epoch_train, batch_size_train,
-                   num_features_train), steps_per_epoch=batches_per_epoch_train, epochs=10,
+                   num_features), steps_per_epoch=batches_per_epoch_train, epochs=10,
                     validation_data=lstm_generator(df_val, batches_per_epoch_val, batch_size_val,
-                   num_features_val), validation_steps=batches_per_epoch_val, callbacks =[call_reduce] )
+                   num_features), validation_steps=batches_per_epoch_val, callbacks =[call_reduce] )
 
 
 model.evaluate_generator(lstm_generator(df_test, batches_per_epoch_test, batch_size_test,
-                   num_features_test), steps= batches_per_epoch_test)
+                   num_features), steps= batches_per_epoch_test)

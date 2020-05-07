@@ -101,11 +101,12 @@ def lstm_generator(df, batches_per_epoch, batch_size,
   while True:
     for b in range(batches_per_epoch):
       longest_index = (b + 1) * batch_size - 1
-      timesteps = len(max(df['emb'].to_list()[:(b + 1) * batch_size][-batch_size:], key=len))
+      timesteps = len(max(x_list[:(b + 1) * batch_size][-batch_size:], key=len))
       x_train = np.full((batch_size, timesteps, num_features), -99.)
       y_train = np.zeros((batch_size,  1))
       for i in range(batch_size):
         li = b * batch_size + i
-        x_train[i, 0:len(x_list[li]), :] = x_list[li]
         y_train[i] = y_list[li]
+        x_train[i, 0:len(x_list[li]), :] = x_list[li]
+        #y_train[i] = y_list[li]
       yield x_train, y_train
