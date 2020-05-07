@@ -10,7 +10,7 @@ import time
 t = time.time()
 seq_length = 150
 overlap_length = 25
-n_sample = 999999
+n_sample = 2500
 all_class = False
 print('all_class set to ', str(all_class))
 print('sampling is set to ', str(n_sample))
@@ -43,11 +43,6 @@ if not all_class:
   print('New Class distribution:')
   print(mbti_data.type.value_counts())
   print('======================================================')
-
-#check doc length summary
-#mbti_data['len_comment'] = mbti_data.comment.apply(lambda x: docToSent(x))
-#print(mbti_data.describe())
-#mbti_data.drop('len_comment', axis=1, inplace=True)
 
 mbti_data_1 = copy.deepcopy(mbti_data)
 t_h = time.time()
