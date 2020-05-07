@@ -5,12 +5,17 @@ from pathlib import Path
 from utils import *
 import sys
 import copy
+import time
 
-
+t = time.time()
 seq_length = 150
 overlap_length = 25
 n_sample = 999999
-all_class = True
+all_class = False
+print('all_class set to ', str(all_class))
+print('sampling is set to ', str(n_sample))
+print('======================================================\n')
+
 
 data_path = '/home/oblivion/mbti-personality-detection/data'
 filename = 'mbti9k_comments.csv'
@@ -45,28 +50,31 @@ if not all_class:
 #mbti_data.drop('len_comment', axis=1, inplace=True)
 
 mbti_data_1 = copy.deepcopy(mbti_data)
+t_h = time.time()
 print('Splitting comments for heirerchical model by sequence length ', seq_length, ' overlapping length ', overlap_length)
 mbti_data_1['comment'] = mbti_data_1.apply(lambda x: overlappingSplit(x, n=seq_length, n_overlap=overlap_length), axis=1)
 mbti_data_1['index'] = mbti_data_1.index
 mbti_data_1 = docSplit(mbti_data_1, ['author','type','index'])
 mbti_data_1 = mbti_data_1[mbti_data_1['comment'] != -1].reset_index(drop=True)
 print("Done..!")
+print('Total time taken to prepare data for RoBERT', round((time.time()-t_h), 2),' s')
 print('Class distribution after splitting:')
 print(mbti_data_1.type.value_counts())
 print('Total number of rows after splitting douments ', len(mbti_data_1))
 mbti_data_1.to_pickle(os.path.join(data_path, split_sent_filename_h))
 print('======================================================')
 
-
+t_split = time.time()
 print('Splitting comments by sequence length ', seq_length)
 mbti_data['comment'] = mbti_data.apply(lambda x: docSep(x, n=seq_length), axis=1)
 mbti_data = docSplit(mbti_data, ['author','type'])
 mbti_data['comment'] = mbti_data.apply(lambda x: removeSmallDoc(x), axis=1)
 mbti_data = mbti_data[mbti_data['comment'] != -1].reset_index(drop=True)
 print("Done..!")
-print('======================================================')
+print('Total time taken to prepare split sentence', round((time.time()-t_split), 2),' s')
 print('Class distribution after splitting:')
 print(mbti_data.type.value_counts())
 
 print('Total number of rows after splitting douments ', len(mbti_data))
 mbti_data.to_pickle(os.path.join(data_path, split_sent_filename))
+print('Total time taken to prepare data ', round((time.time()-t), 2),' s')

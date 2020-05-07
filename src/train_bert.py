@@ -3,7 +3,7 @@ import pandas as pd
 import os 
 import datetime
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
-os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '1'
+os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '0'
 logging.getLogger("tensorflow").setLevel(logging.WARNING)
 import tensorflow as tf
 import modeling
@@ -16,6 +16,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from func import *
+import time
 #######################
 TRAIN_BATCH_SIZE = 4
 EVAL_BATCH_SIZE = 2
@@ -32,6 +33,8 @@ SAVE_CHECKPOINTS_STEPS = 100000 #if you wish to finetune a model on a larger dat
 # each checpoint weights about 1,5gb
 ITERATIONS_PER_LOOP = 100000
 NUM_TPU_CORES = 8
+t = time.time()
+
 if uncased:
 	with zipfile.ZipFile(os.path.join(folder, "uncased_L-12_H-768_A-12.zip"),"r") as zip_ref:
     		zip_ref.extractall(folder)
@@ -64,7 +67,8 @@ df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
 del mbti_data
 
 X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
-                                    df["Label"].values, test_size=0.8, random_state=42, shuffle=True)
+                                    df["Label"].values, test_size=0.9, random_state=42, shuffle=True)
+print('Length of training sample ', len(X_train))
 #Preprocess data for BERT
 label_list = [str(i) for i in sorted(df['Label'].unique())]
 train_examples = create_examples(X_train, 'train', labels=y_train)
@@ -128,3 +132,4 @@ train_input_fn = run_classifier.input_fn_builder(
     drop_remainder=True)
 estimator.train(input_fn=train_input_fn, max_steps=num_train_steps)
 print('\n__________\nFinished training at {}'.format(datetime.datetime.now()))
+print('\nTotal time taken to fine tune the model ', round(time.time()-t,2), ' s')
