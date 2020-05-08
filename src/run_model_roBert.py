@@ -10,8 +10,8 @@ from func import *
 
 MAX_SEQ_LENGTH = 150
 NUM_SAMPLE = 1500 
-
-emb_data = pd.read_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl')
+all_class = False
+emb_data = pd.read_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) + '.pkl')
 label_list = emb_data['label'].unique().tolist()
 df_train_val, df_test = train_test_split(emb_data, test_size=0.2, random_state=35)
 df_train, df_val = train_test_split(df_train_val, test_size=0.2, random_state=35)

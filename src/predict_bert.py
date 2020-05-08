@@ -28,6 +28,7 @@ WARMUP_PROPORTION = 0.1
 MAX_SEQ_LENGTH = 150
 NUM_SAMPLE = 1500
 uncased = True #False
+all_class = False
 #######################
 folder = './../model_folder'
 OUTPUT_DIR = f'{folder}/outputs'
@@ -176,5 +177,5 @@ else:
     label_final.append(df.loc[k]['Label'])
 
   df_train = pd.DataFrame({'emb': emb_final, 'label': label_final})
-  df_train.to_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl')
+  df_train.to_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_'+str(all_class) +'.pkl')
   print("\n__________\nEmbeddings saved to data folder.")
