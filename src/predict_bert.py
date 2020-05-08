@@ -73,28 +73,33 @@ VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
 CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
 INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-42181')
 
-fname = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
-mbti_data = pd.read_pickle(fname)
-####
-#mbti_data = mbti_data[:10000]
-####
-df = pd.DataFrame()
-df["Text"] = mbti_data['comment']
-df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
-index_l = mbti_data['index'].tolist()
-print('\n_______________\nValue counts for labels :\n', df['Label'].value_counts())
 del mbti_data
 
 if FLAG != 'H':
-  X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
-                                    df["Label"].values, test_size=0.3, random_state=42, shuffle=True)
-  predict_examples = create_examples(X_test, 'test')
-  print('Length of test set:', len(X_test))
-  #print('\n_______________\nValue counts for labels :\n', y_test.value_counts())
+  fname = './../data/training_data_sample_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
+  mbti_data = pd.read_pickle(fname)
+  ####
+  #mbti_data = mbti_data[:10000]
+  ####
+  df = pd.DataFrame()
+  df["Text"] = mbti_data['comment']
+  df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
 else:
-  predict_examples = create_examples(df['Text'], 'test')
-  print('\n_______________\nLength of test set:', len(df))
-  X_train = df #For num _train_steps parameter
+  fname = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
+  mbti_data = pd.read_pickle(fname)
+  ####
+  #mbti_data = mbti_data.sample(n=150000)
+  ####
+  df = pd.DataFrame()
+  df["Text"] = mbti_data['comment']
+  df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
+  index_l = mbti_data['index'].tolist()
+
+print('\n_______________\nValue counts for labels :\n', df['Label'].value_counts())
+del mbti_data
+predict_examples = create_examples(df['Text'], 'test')
+print('\n_______________\nLength of test set:', len(df))
+X_train = df #For num _train_steps parameter
 	
 #Preprocess data for BERT
 label_list = [str(i) for i in sorted(df['Label'].unique())]
@@ -151,7 +156,7 @@ if FLAG != 'H':
   for prediction in result:
     preds.append(np.argmax(prediction['probabilities']))
 
-  print("\n__________\nAccuracy of BERT is:",accuracy_score(y_test,preds))
+  print("\n__________\nAccuracy of BERT is:",accuracy_score(np.array(df['Label']),preds))
   print(classification_report(y_test,preds))
 else:
   #Load Heirechical data
