@@ -27,7 +27,7 @@ WARMUP_PROPORTION = 0.1
 MAX_SEQ_LENGTH = 150
 NUM_SAMPLE = 2500
 uncased = True #False
-all_class = False
+all_class = True
 #######################
 folder = './../model_folder'
 # Model configs

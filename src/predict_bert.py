@@ -17,18 +17,19 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from func import *
+import time
 folder = './../model_folder'
-
-FLAG = 'H'
+t = time.time()
+FLAG = 'S'
 TRAIN_BATCH_SIZE = 4
 EVAL_BATCH_SIZE = 2
 LEARNING_RATE = 1e-5
 NUM_TRAIN_EPOCHS = 1.0
 WARMUP_PROPORTION = 0.1
 MAX_SEQ_LENGTH = 150
-NUM_SAMPLE = 1500
+NUM_SAMPLE = 4500
 uncased = True #False
-all_class = False
+all_class = True
 #######################
 folder = './../model_folder'
 OUTPUT_DIR = f'{folder}/outputs'
@@ -72,24 +73,22 @@ print('BERT model :', BERT_MODEL)
 
 VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
 CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
-INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-42181')
-
-del mbti_data
+INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-57614')
 
 if FLAG != 'H':
-  fname = './../data/training_data_sample_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
+  fname = './../data/training_data_sample_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) +'.pkl'
   mbti_data = pd.read_pickle(fname)
   ####
-  #mbti_data = mbti_data[:10000]
+  mbti_data = mbti_data.sample(n=500000)
   ####
   df = pd.DataFrame()
   df["Text"] = mbti_data['comment']
   df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
 else:
-  fname = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
+  fname = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) + '.pkl'
   mbti_data = pd.read_pickle(fname)
   ####
-  #mbti_data = mbti_data.sample(n=150000)
+  mbti_data = mbti_data[:1000000]
   ####
   df = pd.DataFrame()
   df["Text"] = mbti_data['comment']
@@ -179,3 +178,5 @@ else:
   df_train = pd.DataFrame({'emb': emb_final, 'label': label_final})
   df_train.to_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_'+str(all_class) +'.pkl')
   print("\n__________\nEmbeddings saved to data folder.")
+
+print("\n____________\nTotal run time : ", round(time.time()-t,2))
