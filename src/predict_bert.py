@@ -20,7 +20,7 @@ from func import *
 import time
 folder = './../model_folder'
 t = time.time()
-FLAG = 'S'
+FLAG = 'H'
 TRAIN_BATCH_SIZE = 4
 EVAL_BATCH_SIZE = 2
 LEARNING_RATE = 1e-5
