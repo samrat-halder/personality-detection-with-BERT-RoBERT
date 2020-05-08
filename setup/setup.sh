@@ -19,9 +19,11 @@ sudo apt-get install cuda
 echo 'export CUDA_HOME=/usr/local/cuda' >> ~/.bashrc
 echo 'export PATH=$PATH:$CUDA_HOME/bin' >> ~/.bashrc
 echo 'export LD_LIBRARY_PATH=$CUDA_HOME/lib64' >> ~/.bashrc
-source ~/.bashrc
+source /home/oblivion/.bashrc
 sudo dpkg -i libcudnn7_7.4.2.24-1+cuda9.0_amd64.deb   
 sudo dpkg -i libcudnn7-dev_7.4.2.24-1+cuda9.0_amd64.deb
 sudo dpkg -i libcudnn7-doc_7.4.2.24-1+cuda9.0_amd64.deb    
 sudo apt-get install python3.6-gdbm
 sudo apt-get install htop
+export LC_ALL="en_US.UTF-8" 
+export LC_CTYPE="en_US.UTF-8"

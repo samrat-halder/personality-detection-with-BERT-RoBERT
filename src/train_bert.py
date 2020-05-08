@@ -2,6 +2,7 @@
 import pandas as pd
 import os 
 import datetime
+import logging
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
 os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '0'
 logging.getLogger("tensorflow").setLevel(logging.WARNING)
@@ -24,8 +25,9 @@ LEARNING_RATE = 1e-5
 NUM_TRAIN_EPOCHS = 1.0
 WARMUP_PROPORTION = 0.1
 MAX_SEQ_LENGTH = 150
-NUM_SAMPLE = 1500
+NUM_SAMPLE = 2500
 uncased = True #False
+all_class = False
 #######################
 folder = './../model_folder'
 # Model configs
@@ -58,7 +60,7 @@ OUTPUT_DIR = f'{folder}/outputs'
 print(f'Model output directory: {OUTPUT_DIR}')
 print(f'BERT pretrained directory: {BERT_PRETRAINED_DIR}')
 
-fname = './../data/training_data_sample_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '.pkl'
+fname = './../data/training_data_sample_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) + '.pkl'
 mbti_data = pd.read_pickle(fname)
 df = pd.DataFrame()
 df["Text"] = mbti_data['comment']
@@ -67,7 +69,7 @@ df["Label"] = LabelEncoder().fit_transform(mbti_data['type'])
 del mbti_data
 
 X_train, X_test, y_train, y_test = train_test_split(df["Text"].values,
-                                    df["Label"].values, test_size=0.9, random_state=42, shuffle=True)
+                                    df["Label"].values, test_size=0.6, random_state=42, shuffle=True)
 print('Length of training sample ', len(X_train))
 #Preprocess data for BERT
 label_list = [str(i) for i in sorted(df['Label'].unique())]
