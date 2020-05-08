@@ -138,7 +138,8 @@ estimator = tf.contrib.tpu.TPUEstimator(
     train_batch_size=TRAIN_BATCH_SIZE,
     eval_batch_size=EVAL_BATCH_SIZE)
 
-#Test the model 
+#Test the model
+t2 = time.time() 
 print('\n_______________\nPreparing BERT features...')
 predict_features = run_classifier.convert_examples_to_features(
     predict_examples, label_list, MAX_SEQ_LENGTH, tokenizer)
@@ -148,6 +149,7 @@ predict_input_fn = input_fn_builder(
     seq_length=MAX_SEQ_LENGTH,
     is_training=False,
     drop_remainder=False) #if True will drop remainder of the batch
+print("\n____________\nTime taken : ", round(time.time()-t2,2), ' s')
 
 result = estimator.predict(input_fn=predict_input_fn)
 
@@ -157,7 +159,7 @@ if FLAG != 'H':
     preds.append(np.argmax(prediction['probabilities']))
 
   print("\n__________\nAccuracy of BERT is:",accuracy_score(np.array(df['Label']),preds))
-  print(classification_report(y_test,preds))
+  print(classification_report(np.array(df['Label']),preds))
 else:
   #Load Heirechical data
   df_emb = get_embedding(result)
@@ -179,4 +181,4 @@ else:
   df_train.to_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_'+str(all_class) +'.pkl')
   print("\n__________\nEmbeddings saved to data folder.")
 
-print("\n____________\nTotal run time : ", round(time.time()-t,2))
+print("\n____________\nTotal run time : ", round(time.time()-t,2), ' s')
