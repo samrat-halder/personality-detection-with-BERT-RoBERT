@@ -6,11 +6,15 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Embedding, Dense, Input, concatenate, Layer, Lambda, Dropout, Activation
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
 from func import *
+import time
 
+t = time.time()
+epochs = 15
 MAX_SEQ_LENGTH = 150
 NUM_SAMPLE = 4500 
-all_class = False
+all_class = True
 emb_data = pd.read_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) + '.pkl')
 label_list = emb_data['label'].unique().tolist()
 df_train_val, df_test = train_test_split(emb_data, test_size=0.2, random_state=35)
@@ -38,7 +42,7 @@ num_features= 768 #BERT output embedding size
 text_input = Input(shape=(None,768,), dtype='float32', name='text')
 l_mask = layers.Masking(mask_value=-99.)(text_input)
 # encode in a single vector via a LSTM
-encoded_text = layers.LSTM(100,)(l_mask)
+encoded_text = layers.LSTM(250,)(l_mask)
 out_dense = layers.Dense(30, activation='relu')(encoded_text)
 # And we add a softmax classifier on top
 out = layers.Dense(len(label_list), activation='softmax')(out_dense)
@@ -51,10 +55,19 @@ model.summary()
 call_reduce = ReduceLROnPlateau(monitor='val_acc', factor=0.95, patience=3, verbose=2,
                                 mode='auto', min_delta=0.01, cooldown=0, min_lr=0)
 model.fit_generator(lstm_generator(df_train, batches_per_epoch_train, batch_size_train,
-                   num_features), steps_per_epoch=batches_per_epoch_train, epochs=10,
+                   num_features), steps_per_epoch=batches_per_epoch_train, epochs=epochs,
                     validation_data=lstm_generator(df_val, batches_per_epoch_val, batch_size_val,
                    num_features), validation_steps=batches_per_epoch_val, callbacks =[call_reduce] )
 
 
-model.evaluate_generator(lstm_generator(df_test, batches_per_epoch_test, batch_size_test,
-                   num_features), steps= batches_per_epoch_test)
+test_generator = lstm_generator(df_test, batches_per_epoch_test, batch_size_test,
+                   num_features)
+loss, acc = model.evaluate_generator(test_generator, steps= batches_per_epoch_test)
+y_pred = model.predict_generator(test_generator, steps= batches_per_epoch_test)
+
+y_pred = np.argmax(y_pred, axis=-1)
+y_test = df_test['label']#test_generator.classes[validation_generator.index_array]
+
+print('\n__________\nloss: ', loss, 'accuracy: ', acc) # loss:  0.47286026436090467 accuracy:  0.864
+print('accuracy_score: \n', classification_report(y_test, y_pred)) # accuracy_score:  0.095
+print('Total time taken :', round(time.time()-t, 2), ' s')
