@@ -1,0 +1,131 @@
+BERT model : uncased_L-12_H-768_A-12
+
+_______________
+Value counts for labels :
+ 3    295512
+2    283473
+1    196128
+0    191063
+Name: Label, dtype: int64
+
+_______________
+Length of test set: 966176
+WARNING:tensorflow:Estimator's model_fn (<function model_fn_builder.<locals>.model_fn at 0x7ff6e86a0a60>) includes params argument, but params are not passed to Estimator.
+WARNING:tensorflow:eval_on_tpu ignored because use_tpu is False.
+
+_______________
+Preparing BERT features...
+
+____________
+Time taken :  2251.76  s
+{}
+2020-05-08 15:11:09.399498: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-05-08 15:11:10.166941: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-05-08 15:11:10.167270: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: Tesla P100-PCIE-16GB major: 6 minor: 0 memoryClockRate(GHz): 1.3285
+pciBusID: 0000:00:04.0
+totalMemory: 15.89GiB freeMemory: 15.60GiB
+2020-05-08 15:11:10.167294: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2020-05-08 15:11:10.489342: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-05-08 15:11:10.489394: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2020-05-08 15:11:10.489403: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2020-05-08 15:11:10.489627: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 15117 MB memory) -> physical GPU (device: 0, name: Tesla P100-PCIE-16GB, pci bus id: 0000:00:04.0, compute capability: 6.0)
+2020-05-08 15:11:11.506489: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+2020-05-08 15:11:11.954204: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+2020-05-08 15:11:12.470236: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+2020-05-08 15:11:12.992184: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+2020-05-08 15:11:13.431204: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+
+__________
+Embeddings saved to data folder.
+
+____________
+Total run time :  9060.93  s
+
+Size of training-validation set  7218
+Class distribution 
+ 3    2302
+2    2073
+1    1431
+0    1412
+Name: label, dtype: int64
+
+___________
+Size of training-validation set  802
+Class distribution 
+ 3    258
+2    204
+0    173
+1    167
+Name: label, dtype: int64
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+text (InputLayer)            (None, None, 768)         0         
+_________________________________________________________________
+masking (Masking)            (None, None, 768)         0         
+_________________________________________________________________
+lstm (LSTM)                  (None, 50)                163800    
+_________________________________________________________________
+dense (Dense)                (None, 30)                1530      
+_________________________________________________________________
+dense_1 (Dense)              (None, 4)                 124       
+=================================================================
+Total params: 165,454
+Trainable params: 165,454
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/10
+2020-05-10 06:11:18.016253: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-05-10 06:11:19.428421: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-05-10 06:11:19.428828: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: Tesla P100-PCIE-16GB major: 6 minor: 0 memoryClockRate(GHz): 1.3285
+pciBusID: 0000:00:04.0
+totalMemory: 15.89GiB freeMemory: 15.60GiB
+2020-05-10 06:11:19.428890: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2020-05-10 06:11:35.914330: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-05-10 06:11:35.914386: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2020-05-10 06:11:35.914395: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2020-05-10 06:11:35.914708: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 15117 MB memory) -> physical GPU (device: 0, name: Tesla P100-PCIE-16GB, pci bus id: 0000:00:04.0, compute capability: 6.0)
+812/812 [==============================] - 959s 1s/step - loss: 1.3732 - acc: 0.3043 - val_loss: 1.3607 - val_acc: 0.3489
+Epoch 2/10
+812/812 [==============================] - 958s 1s/step - loss: 1.3653 - acc: 0.3174 - val_loss: 1.3618 - val_acc: 0.3356
+Epoch 3/10
+812/812 [==============================] - 959s 1s/step - loss: 1.3623 - acc: 0.3202 - val_loss: 1.3631 - val_acc: 0.3222
+Epoch 4/10
+811/812 [============================>.] - ETA: 1s - loss: 1.3588 - acc: 0.3241   
+Epoch 00004: ReduceLROnPlateau reducing learning rate to 0.0009500000451225787.
+812/812 [==============================] - 960s 1s/step - loss: 1.3590 - acc: 0.3242 - val_loss: 1.3727 - val_acc: 0.3333
+Epoch 5/10
+812/812 [==============================] - 966s 1s/step - loss: 1.3566 - acc: 0.3285 - val_loss: 1.3719 - val_acc: 0.3111
+Epoch 6/10
+812/812 [==============================] - 968s 1s/step - loss: 1.3527 - acc: 0.3271 - val_loss: 1.3757 - val_acc: 0.3200
+Epoch 7/10
+811/812 [============================>.] - ETA: 1s - loss: 1.3470 - acc: 0.3342   
+Epoch 00007: ReduceLROnPlateau reducing learning rate to 0.0009025000152178108.
+812/812 [==============================] - 969s 1s/step - loss: 1.3470 - acc: 0.3341 - val_loss: 1.3800 - val_acc: 0.3200
+Epoch 8/10
+812/812 [==============================] - 984s 1s/step - loss: 1.3383 - acc: 0.3414 - val_loss: 1.3923 - val_acc: 0.3156
+Epoch 9/10
+812/812 [==============================] - 963s 1s/step - loss: 1.3297 - acc: 0.3519 - val_loss: 1.4018 - val_acc: 0.3133
+Epoch 10/10
+557/812 [===================>..........] - ETA: 4:41 - loss: 1.3224 - acc: 0.3579ls
+811/812 [============================>.] - ETA: 1s - loss: 1.3181 - acc: 0.3605  
+Epoch 00010: ReduceLROnPlateau reducing learning rate to 0.0008573750033974647.
+812/812 [==============================] - 933s 1s/step - loss: 1.3182 - acc: 0.3602 - val_loss: 1.4153 - val_acc: 0.2956
+
+__________
+loss:  1.4062220454216003 accuracy:  0.2980000065267086
+accuracy_score: 
+               precision    recall  f1-score   support
+
+           0       0.15      0.03      0.05       108
+           1       0.29      0.04      0.07       103
+           2       0.26      0.38      0.31       130
+           3       0.29      0.50      0.36       159
+
+    accuracy                           0.27       500
+   macro avg       0.25      0.24      0.20       500
+weighted avg       0.25      0.27      0.22       500
+
+Total time taken : 9701.28  s

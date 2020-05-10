@@ -1,0 +1,48 @@
+BERT model : uncased_L-12_H-768_A-12
+
+_______________
+Value counts for labels :
+ 7    295512
+6    283473
+5    104746
+4     91382
+3     72805
+1     59700
+2     40616
+0     17942
+Name: Label, dtype: int64
+
+_______________
+Length of test set: 966176
+WARNING:tensorflow:Estimator's model_fn (<function model_fn_builder.<locals>.model_fn at 0x7fd257620a60>) includes params argument, but params are not passed to Estimator.
+WARNING:tensorflow:eval_on_tpu ignored because use_tpu is False.
+
+_______________
+Preparing BERT features...
+
+____________
+Time taken :  2168.01  s
+{}
+2020-05-08 17:45:00.200854: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-05-08 17:45:00.919278: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-05-08 17:45:00.919581: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: Tesla P100-PCIE-16GB major: 6 minor: 0 memoryClockRate(GHz): 1.3285
+pciBusID: 0000:00:04.0
+totalMemory: 15.89GiB freeMemory: 15.60GiB
+2020-05-08 17:45:00.919603: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2020-05-08 17:45:01.229734: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-05-08 17:45:01.229789: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2020-05-08 17:45:01.229804: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2020-05-08 17:45:01.230018: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 15117 MB memory) -> physical GPU (device: 0, name: Tesla P100-PCIE-16GB, pci bus id: 0000:00:04.0, compute capability: 6.0)
+2020-05-08 17:45:02.251167: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+2020-05-08 17:45:02.688491: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+2020-05-08 17:45:03.188720: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+2020-05-08 17:45:03.703060: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+2020-05-08 17:45:04.139662: W tensorflow/core/framework/allocator.cc:113] Allocation of 579705600 exceeds 10% of system memory.
+
+__________
+Embeddings saved to data folder.
+
+____________
+Total run time :  8972.01  s
+

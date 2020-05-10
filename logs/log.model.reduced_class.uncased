@@ -1,0 +1,109 @@
+BERT model : uncased_L-12_H-768_A-12
+Model output directory: ./../model_folder/outputs
+BERT pretrained directory: ./../model_folder/uncased_L-12_H-768_A-12
+Length of training sample  230458
+
+__________
+Row 0 - guid of training set :  train
+
+__________
+Row 0 - text_a of training set :  . You 're talking out your ass. Jones existed before humans , and she says that stars existed before the gods apparently put them there. In panels 4 and 5 , she gives credence to the claims that gods created the stars - after humans came into existence. In the last panel , she reveals that she saw the stars long before humans existed , and long before any of the humans ' gods could put them there. It 's an intentional contradiction. And for the spoopy skeletons walking on the shoreUpdoot for calcium Steve Bannon , probably. Haha , I think that was it. He probably expected some kind of , `` Let 's get coffee at some point '' type introduction. The Civil War was a mistake. Worse , he 's just straight up called himself a socialist before
+
+__________
+Row 0 - text_b of training set :  None
+
+__________
+Row 0 - label of training set :  3
+
+__________
+Row 0 - tokenized version of text_a of training set :
+ . you ' re talking out your ass . jones existed before humans , and she says that stars existed before the gods apparently put them there . in panels 4 and 5 , she gives cr ##ede ##nce to the claims that gods created the stars - after humans came into existence . in the last panel , she reveals that she saw the stars long before humans existed , and long before any of the humans ' gods could put them there . it ' s an intentional contradiction . and for the sp ##oop ##y skeletons walking on the shore ##up ##do ##ot for calcium steve ban ##non , probably . ha ##ha , i think that was it . he probably expected some kind of , ` ` let ' s get coffee at some point ' ' type introduction . the civil war was a mistake . worse , he ' s just straight up called himself a socialist before
+
+Creating training features. Please wait...
+
+__________
+Input IDs :  [101, 1012, 2017, 1005, 2128, 3331, 2041, 2115, 4632, 1012, 3557, 5839, 2077, 4286, 1010, 1998, 2016, 2758, 2008, 3340, 5839, 2077, 1996, 5932, 4593, 2404, 2068, 2045, 1012, 1999, 9320, 1018, 1998, 1019, 1010, 2016, 3957, 13675, 14728, 5897, 2000, 1996, 4447, 2008, 5932, 2580, 1996, 3340, 1011, 2044, 4286, 2234, 2046, 4598, 1012, 1999, 1996, 2197, 5997, 1010, 2016, 7657, 2008, 2016, 2387, 1996, 3340, 2146, 2077, 4286, 5839, 1010, 1998, 2146, 2077, 2151, 1997, 1996, 4286, 1005, 5932, 2071, 2404, 2068, 2045, 1012, 2009, 1005, 1055, 2019, 21249, 26917, 1012, 1998, 2005, 1996, 11867, 18589, 2100, 24365, 3788, 2006, 1996, 5370, 6279, 3527, 4140, 2005, 13853, 3889, 7221, 8540, 1010, 2763, 1012, 5292, 3270, 1010, 1045, 2228, 2008, 2001, 2009, 1012, 2002, 2763, 3517, 2070, 2785, 1997, 1010, 1036, 1036, 2292, 1005, 1055, 2131, 4157, 2012, 2070, 2391, 1005, 1005, 2828, 4955, 1012, 1996, 2942, 2162, 102]
+
+__________
+Input Masks :  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+__________
+Segment IDs :  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+WARNING:tensorflow:Estimator's model_fn (<function model_fn_builder.<locals>.model_fn at 0x7fecaf556d90>) includes params argument, but params are not passed to Estimator.
+WARNING:tensorflow:eval_on_tpu ignored because use_tpu is False.
+
+__________
+Started training at 2020-05-08 03:14:17.541750 
+
+Num examples = 230458
+
+Batch size = 4
+2020-05-08 03:16:32.807330: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-05-08 03:16:33.561507: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-05-08 03:16:33.561856: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: Tesla P100-PCIE-16GB major: 6 minor: 0 memoryClockRate(GHz): 1.3285
+pciBusID: 0000:00:04.0
+totalMemory: 15.89GiB freeMemory: 15.60GiB
+2020-05-08 03:16:33.561885: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2020-05-08 03:16:33.882934: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-05-08 03:16:33.882983: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2020-05-08 03:16:33.882991: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2020-05-08 03:16:33.883263: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 15117 MB memory) -> physical GPU (device: 0, name: Tesla P100-PCIE-16GB, pci bus id: 0000:00:04.0, compute capability: 6.0)
+
+__________
+Finished training at 2020-05-08 05:32:08.682233
+
+Total time taken to fine tune the model  8778.28  s
+
+
+
+
+BERT model : uncased_L-12_H-768_A-12
+
+_______________
+Value counts for labels :
+ 3    152972
+2    146815
+0    100649
+1     99564
+Name: Label, dtype: int64
+
+_______________
+Length of test set: 500000
+WARNING:tensorflow:Estimator's model_fn (<function model_fn_builder.<locals>.model_fn at 0x7f96c63a0a60>) includes params argument, but params are not passed to Estimator.
+WARNING:tensorflow:eval_on_tpu ignored because use_tpu is False.
+
+_______________
+Preparing BERT features...
+
+____________
+Time taken :  1070.43  s
+{}
+2020-05-08 11:43:50.995461: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-05-08 11:43:51.707518: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-05-08 11:43:51.707833: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: Tesla P100-PCIE-16GB major: 6 minor: 0 memoryClockRate(GHz): 1.3285
+pciBusID: 0000:00:04.0
+totalMemory: 15.89GiB freeMemory: 15.60GiB
+2020-05-08 11:43:51.707856: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2020-05-08 11:43:52.040873: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-05-08 11:43:52.040933: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2020-05-08 11:43:52.040942: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2020-05-08 11:43:52.041173: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 15117 MB memory) -> physical GPU (device: 0, name: Tesla P100-PCIE-16GB, pci bus id: 0000:00:04.0, compute capability: 6.0)
+
+__________
+Accuracy of BERT is: 0.43434
+              precision    recall  f1-score   support
+
+           0       0.44      0.18      0.26    100649
+           1       0.41      0.41      0.41     99564
+           2       0.41      0.64      0.50    146815
+           3       0.49      0.42      0.45    152972
+
+    accuracy                           0.43    500000
+   macro avg       0.44      0.41      0.41    500000
+weighted avg       0.44      0.43      0.42    500000
+
+
+____________
+Total run time :  4401.65  s

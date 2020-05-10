@@ -1,0 +1,122 @@
+[nltk_data] Downloading package punkt to /home/oblivion/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+all_class set to  False
+sampling is set to  999999
+======================================================
+
+Total number of rows  9252
+Total number of rows after removing duplicate authors  9149
+======================================================
+Class distribution:
+intp    2312
+intj    1831
+infp    1067
+infj    1021
+entp     623
+enfp     603
+istp     428
+entj     358
+istj     213
+enfj     206
+isfp     142
+isfj     121
+estp      81
+esfp      60
+estj      49
+esfj      34
+Name: type, dtype: int64
+Removing classes with very low counts : 'esfp','estp','estj','esfj','istp','istj','isfp','isfj
+======================================================
+Combine similar classes and filtering less frequent classes...
+New Class distribution:
+intp    2312
+inf     2088
+intj    1831
+en      1790
+Name: type, dtype: int64
+======================================================
+Splitting comments for heirerchical model by sequence length  150  overlapping length  25
+Done..!
+Total time taken to prepare data for RoBERT 47800.46  s
+Class distribution after splitting:
+intp    603985
+intj    584098
+inf     399023
+en      394236
+Name: type, dtype: int64
+Total number of rows after splitting douments  1981342
+======================================================
+Splitting comments by sequence length  150
+Done..!
+Total time taken to prepare split sentence 3303.61  s
+Class distribution after splitting:
+intp    697132
+intj    635008
+en      456402
+inf     441865
+Name: type, dtype: int64
+Total number of rows after splitting douments  2230407
+Total time taken to prepare data  51126.54  s
+
+
+
+
+[nltk_data] Downloading package punkt to /home/oblivion/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+all_class set to  True
+sampling is set to  999999
+======================================================
+
+Total number of rows  9252
+Total number of rows after removing duplicate authors  9149
+======================================================
+Class distribution:
+intp    2312
+intj    1831
+infp    1067
+infj    1021
+entp     623
+enfp     603
+istp     428
+entj     358
+istj     213
+enfj     206
+isfp     142
+isfj     121
+estp      81
+esfp      60
+estj      49
+esfj      34
+Name: type, dtype: int64
+Removing classes with very low counts : 'esfp','estp','estj','esfj','istp','istj','isfp','isfj
+======================================================
+Splitting comments for heirerchical model by sequence length  150  overlapping length  25
+Done..!
+Total time taken to prepare data for RoBERT 49127.83  s
+Class distribution after splitting:
+intp    603985
+intj    584098
+infj    201183
+infp    197840
+entp    158243
+enfp    105902
+entj     95190
+enfj     34901
+Name: type, dtype: int64
+Total number of rows after splitting douments  1981342
+======================================================
+Splitting comments by sequence length  150
+Done..!
+Total time taken to prepare split sentence 3145.23  s
+Class distribution after splitting:
+intp    697132
+intj    635008
+infp    231790
+infj    210075
+entp    180560
+enfp    125339
+entj    108539
+enfj     41964
+Name: type, dtype: int64
+Total number of rows after splitting douments  2230407
+Total time taken to prepare data  52294.97  s

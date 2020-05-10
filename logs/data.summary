@@ -1,0 +1,113 @@
+[nltk_data] Downloading package punkt to /home/oblivion/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+all_class set to  True
+sampling is set to  999999
+======================================================
+
+Total number of rows  9252
+Total number of rows after removing duplicate authors  9149
+======================================================
+Class distribution:
+intp    2312
+intj    1831
+infp    1067
+infj    1021
+entp     623
+enfp     603
+istp     428
+entj     358
+istj     213
+enfj     206
+isfp     142
+isfj     121
+estp      81
+esfp      60
+estj      49
+esfj      34
+Name: type, dtype: int64
+Removing classes with very low counts : 'esfp','estp','estj','esfj','istp','istj','isfp','isfj
+======================================================
+All types :  ['entp', 'intj', 'intp', 'entj', 'infp', 'infj', 'enfj', 'enfp']
+Calculating sentence length using spaCy..
+Total time taken  4539.44  s
+======================================================
+Type:entp
+         len_comment
+count     623.000000
+mean     2464.622793
+std      8486.205040
+min        36.000000
+25%       269.500000
+50%       732.000000
+75%      2064.000000
+max    177232.000000
+Type:intj
+         len_comment
+count    1831.000000
+mean     2878.892955
+std      7514.687806
+min        13.000000
+25%       287.000000
+50%       847.000000
+75%      2526.500000
+max    179793.000000
+Type:intp
+        len_comment
+count   2312.000000
+mean    2468.975779
+std     5535.269256
+min       17.000000
+25%      263.750000
+50%      726.500000
+75%     2192.250000
+max    77883.000000
+Type:entj
+        len_comment
+count    358.000000
+mean    2635.516760
+std     5494.701663
+min       47.000000
+25%      276.000000
+50%      789.500000
+75%     2275.250000
+max    65634.000000
+Type:infp
+        len_comment
+count   1067.000000
+mean    1827.717901
+std     3365.962738
+min       24.000000
+25%      242.000000
+50%      611.000000
+75%     1814.000000
+max    35093.000000
+Type:infj
+        len_comment
+count   1021.000000
+mean    1792.229187
+std     3657.443494
+min       39.000000
+25%      248.000000
+50%      620.000000
+75%     1618.000000
+max    34021.000000
+Type:enfj
+        len_comment
+count    206.000000
+mean    1752.092233
+std     3720.303338
+min       60.000000
+25%      273.750000
+50%      662.500000
+75%     1642.000000
+max    33893.000000
+Type:enfp
+        len_comment
+count    603.000000
+mean    1814.744610
+std     3981.431743
+min       44.000000
+25%      202.000000
+50%      591.000000
+75%     1699.000000
+max    44008.000000
