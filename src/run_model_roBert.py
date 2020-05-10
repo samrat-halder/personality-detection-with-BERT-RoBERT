@@ -11,20 +11,20 @@ from func import *
 import time
 
 t = time.time()
-epochs = 15
+epochs = 5
 MAX_SEQ_LENGTH = 150
-NUM_SAMPLE = 4500 
-all_class = True
+NUM_SAMPLE = 999999 
+all_class = False
 emb_data = pd.read_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) + '.pkl')
 label_list = emb_data['label'].unique().tolist()
-df_train_val, df_test = train_test_split(emb_data, test_size=0.2, random_state=35)
-df_train, df_val = train_test_split(df_train_val, test_size=0.2, random_state=35)
+df_train_val, df_test = train_test_split(emb_data, test_size=0.1, random_state=35)
+df_train, df_val = train_test_split(df_train_val, test_size=0.1, random_state=35)
 
 print('\n___________\nSize of training-validation set ', len(df_train_val))
 print('Class distribution \n', df_train_val['label'].value_counts()) 
 print('\n___________\nSize of training-validation set ', len(df_test))
 print('Class distribution \n', df_test['label'].value_counts())
-batch_size_train = 10
+batch_size_train = 5
 batches_per_epoch_train = len(df_train) // batch_size_train
 df_train = df_train[:batch_size_train*batches_per_epoch_train] #Fixing dimension to nearest batch
 assert len(df_train) == batches_per_epoch_train * batch_size_train
@@ -42,7 +42,7 @@ num_features= 768 #BERT output embedding size
 text_input = Input(shape=(None,768,), dtype='float32', name='text')
 l_mask = layers.Masking(mask_value=-99.)(text_input)
 # encode in a single vector via a LSTM
-encoded_text = layers.LSTM(250,)(l_mask)
+encoded_text = layers.LSTM(100,)(l_mask)
 out_dense = layers.Dense(30, activation='relu')(encoded_text)
 # And we add a softmax classifier on top
 out = layers.Dense(len(label_list), activation='softmax')(out_dense)
