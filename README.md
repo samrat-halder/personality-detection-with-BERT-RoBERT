@@ -16,5 +16,11 @@ Step-by-step instructions for setting up the environment:
 8. copy mbti9k_comments.csv file (2GB) to ./data/
 
 
-Step-by-step instructions for running the data preparation modules and models:
-1. cd ```./src```. Run ```python3 src/data_prep.py``` to create training samples for both the models
+
+Step-by-step instructions for running the codes:
+1. ```cd ./src``` 
+2. To quickly check a summary of the data run ```python3 data_summary.py```. You may need to change the default parameters *n_sample = 999999 all_class = True*. This will output a file in data directory with sentence length for each user. Please note this may take long time if you run for the entire dataset. *999999* is the default value that runs for the whole sample.
+2. Run ```python3 src/data_prep.py``` to create training samples for both the models. You may want to change the default parameters *seq_length = 150, overlap_length = 25, n_sample = 999999, all_class = False*. This will create files in the data directory for BERT and RoBERT. The default value for *n_sample* took almost three hours in our machine.
+3. Run ```python3 train_bert.py``` with default parameters *TRAIN_BATCH_SIZE = 4, EVAL_BATCH_SIZE = 2, LEARNING_RATE = 1e, NUM_TRAIN_EPOCHS = 1.0, WARMUP_PROPORTION = 0.1, MAX_SEQ_LENGTH = 150, NUM_SAMPLE = 4500, uncased = True #False, all_class = True* This will fine tune the BERT model for the classification task. It will *create model.ckpt-NUM* files in the model_folder/outputs directory. 
+4. Run ```python3 predict_bert.py```. If you set the parameter to *FLAG = 'H'* then it will prepare a dataset with grouped embeddings for the entire document of each individual user and pass it to the RoBERT model. Otherwise it will run the fine tuned BERT model on a test dataset. Also you need to set the *BERT_NUM* parameter from the *ckpt* file from step 3. Please refer to the script for other parameters. 
+5. Run ```python3 run_model_roBert.py``` to run the RoBERT model.
