@@ -16,5 +16,5 @@ Step-by-step instructions for setting up the environment:
 8. copy mbti9k_comments.csv file (2GB) to ./data/
 
 
-Step-by-step instructions for setting up the environment:
+Step-by-step instructions for running the data preparation modules and models:
 1. cd ```./src```. Run ```python3 src/data_prep.py``` to create training samples for both the models
