@@ -24,3 +24,5 @@ Step-by-step instructions for running the codes:
 3. Run ```python3 train_bert.py``` with default parameters *TRAIN_BATCH_SIZE = 4, EVAL_BATCH_SIZE = 2, LEARNING_RATE = 1e, NUM_TRAIN_EPOCHS = 1.0, WARMUP_PROPORTION = 0.1, MAX_SEQ_LENGTH = 150, NUM_SAMPLE = 4500, uncased = True #False, all_class = True* This will fine tune the BERT model for the classification task. It will *create model.ckpt-NUM* files in the model_folder/outputs directory. 
 4. Run ```python3 predict_bert.py```. If you set the parameter to *FLAG = 'H'* then it will prepare a dataset with grouped embeddings for the entire document of each individual user and pass it to the RoBERT model. Otherwise it will run the fine tuned BERT model on a test dataset. Also you need to set the *BERT_NUM* parameter from the *ckpt* file from step 3. Please refer to the script for other parameters. 
 5. Run ```python3 run_model_roBert.py``` to run the RoBERT model.
+
+*Please note some of the functions of this repository was taken from Google Research's BERT repository*
