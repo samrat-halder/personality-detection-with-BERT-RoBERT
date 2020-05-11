@@ -12,7 +12,7 @@ all_class = True
 print('all_class set to ', str(all_class))
 print('sampling is set to ', str(n_sample))
 print('======================================================\n')
-data_path = '/home/oblivion/mbti-personality-detection/data'
+data_path = './../data'
 filename = 'mbti9k_comments.csv'
 extended_filename = 'data_summary_'+ str(all_class)+ '.pkl'
 mbti_data = pd.read_csv(os.path.join(data_path, filename))

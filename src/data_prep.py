@@ -17,7 +17,7 @@ print('sampling is set to ', str(n_sample))
 print('======================================================\n')
 
 
-data_path = '/home/oblivion/mbti-personality-detection/data'
+data_path = './../data'#'/home/oblivion/mbti-personality-detection/data'
 filename = 'mbti9k_comments.csv'
 split_sent_filename = 'training_data_sample_' + str(seq_length) + '_' + str(n_sample) + '_' + str(all_class) + '.pkl'
 split_sent_filename_h = 'training_data_sample_h_' + str(seq_length) + '_' + str(n_sample) + '_'+ str(all_class)+ '.pkl'
