@@ -13,7 +13,7 @@ Step-by-step instructions for setting up the environment:
 5. Naviagte back to home dir ```cd ../``` 
 6. Run ```sh requirement.sh```
 7. Import bash file by ```source ~/.bashrc```
-8. copy mbti9k_comments.csv file (2GB) to ./data/
+8. copy mbti9k_comments.csv file (~2GB) to ./data/ (This file can be obtained on request)
 
 
 
@@ -26,3 +26,7 @@ Step-by-step instructions for running the codes:
 5. Run ```python3 run_model_roBert.py``` to run the RoBERT model.
 
 *Please note some of the functions of this repository was taken from Google Research's BERT repository*
+
+**Results**: We achieved 41% accuracy on an 8-class and 43% accuracy on a 4-class classification problem with MBTI type personality detection in our research. We also ran the 4-class classification task with RoBERT for the full document and achieved the best accuracy of 29.8%.
+
+For 4-class classification the fine-tuning and training BERT-base model took 2 hr 25 mins with 230,428 examples (each of length 150 words). For the same classification task with RoBERT using 10 epochs, batch size of 5 took 2 hr 43 minutes with 7218 samples (whole document). Other computation times for data preparation and other experiments can be found in the log files.
