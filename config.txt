@@ -1,0 +1,14 @@
+[config]
+n_sample = 999999
+all_class = True
+seq_length = 150
+overlap_length = 25
+TRAIN_BATCH_SIZE = 4
+EVAL_BATCH_SIZE = 2
+NUM_TRAIN_EPOCHS = 1.0
+MAX_SEQ_LENGTH = 150
+NUM_SAMPLE = 2500
+uncased = True
+FLAG = H
+BERT_NUM = 21459
+epochs = 5

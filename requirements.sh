@@ -19,4 +19,5 @@ python3 -m pip install sklearn
 python3 -m pip install spacy
 python3 -m pip uninstall numpy 
 python3 -m pip install numpy==1.16.4 # To avod tensorflow warning message
+python3 -m pip install configparser
 echo 'export PYTHONPATH="${PYTHONPATH}:/home/oblivion/personality-detection-with-BERT-RoBERT/utils"' >> ~/.bashrc

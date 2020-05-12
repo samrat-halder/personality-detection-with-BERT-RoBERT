@@ -21,12 +21,16 @@ from utils import *
 import sys
 import copy
 import time
-
+import configparser
+configParser = configparser.RawConfigParser()
+configFilePath = './../config.txt'
+configParser.read(configFilePath)
 t = time.time()
-seq_length = 150 #default sequence length. Do not set to a very high value. MAX=512
-overlap_length = 25 #overlapping length for RoBERT
-n_sample = 999999     #number of rows to be picked fromt the whole dataset. default=999999. can be set to a lower value
-all_class = False     #True or False. If True does a class aggregration 
+
+seq_length = int(configParser.get('config', 'seq_length')) #150 default sequence length. Do not set to a very high value. MAX=512
+overlap_length = int(configParser.get('config', 'overlap_length')) #25 overlapping length for RoBERT
+n_sample = int(configParser.get('config', 'n_sample'))     #number of rows to be picked fromt the whole dataset. default=999999. can be set to a lower value
+all_class = eval(int(configParser.get('config', 'all_class')))  #True or False. If True does a class aggregration 
 print('all_class set to ', str(all_class))
 print('sampling is set to ', str(n_sample))
 print('======================================================\n')

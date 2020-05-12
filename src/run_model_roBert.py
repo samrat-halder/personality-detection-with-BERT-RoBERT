@@ -23,12 +23,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from func import *
 import time
-
+import configparser
+configParser = configparser.RawConfigParser()
+configFilePath = './../config.txt'
+configParser.read(configFilePath)
 t = time.time()
-epochs = 5 #can be set to a higher value based on the training sample size
-MAX_SEQ_LENGTH = 150 
-NUM_SAMPLE = 999999 
-all_class = False
+epochs = int(configParser.get('config', 'epochs')) #5  can be set to a higher value based on the training sample size
+MAX_SEQ_LENGTH = int(configParser.get('config', 'seq_length')) #150 
+NUM_SAMPLE = int(configParser.get('config', 'NUM_SAMPLE'))#999999 
+all_class = eval(configParser.get('config', 'all_class'))#False
 emb_data = pd.read_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) + '.pkl')
 label_list = emb_data['label'].unique().tolist()
 df_train_val, df_test = train_test_split(emb_data, test_size=0.1, random_state=35)

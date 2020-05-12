@@ -33,16 +33,20 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from func import *
 import time
+import configparser
+configParser = configparser.RawConfigParser()
+configFilePath = './../config.txt'
+configParser.read(configFilePath)
 #######################
-TRAIN_BATCH_SIZE = 4     #training batch size. Do not set a high value. May arise memory error
-EVAL_BATCH_SIZE = 2      #evaluation batch size
+TRAIN_BATCH_SIZE = int(configParser.get('config', 'TRAIN_BATCH_SIZE'))     #training batch size=4. Do not set a high value. May arise memory error
+EVAL_BATCH_SIZE = int(configParser.get('config', 'EVAL_BATCH_SIZE'))       #evaluation batch size=2
 LEARNING_RATE = 1e-5     #learning rate
 NUM_TRAIN_EPOCHS = 1.0   #number of training epochs
 WARMUP_PROPORTION = 0.1  #warmup proportion 
-MAX_SEQ_LENGTH = 150     #max sequence length for BERT input sequence
-NUM_SAMPLE = 2500        #number of samples being used. This should be same as the data_prep file
-uncased = True #False    #can be True or False Defaul True. We use uncased version of the BERT pretrained model
-all_class = True         #can be True or False
+MAX_SEQ_LENGTH = int(configParser.get('config', 'seq_length'))      #max sequence length for BERT input sequence=150
+NUM_SAMPLE = int(configParser.get('config', 'NUM_SAMPLE'))        #number of samples being used=2500. This should be same as the data_prep file
+uncased =  eval(configParser.get('config', 'uncased'))#True    #can be True or False Defaul True. We use uncased version of the BERT pretrained model
+all_class = eval(configParser.get('config', 'all_class'))  #False        #can be True or False
 #######################
 folder = './../model_folder'
 # Model configs

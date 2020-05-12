@@ -34,20 +34,25 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from func import *
 import time
+import configparser
+configParser = configparser.RawConfigParser()
+configFilePath = './../config.txt'
+configParser.read(configFilePath)
+
 folder = './../model_folder'
 t = time.time()
-FLAG = 'H'       #If set to "H" it will create a training test set for RoBERT with BERT embeddings
+FLAG = str(configParser.get('config', 'FLAG'))       #If set to "H" it will create a training test set for RoBERT with BERT embeddings
                  #else this wil test the BERT model
-BERT_NUM = 21459 #This has to be set equal to the model-ckpt file number generated after BERT fine tuning
-TRAIN_BATCH_SIZE = 4  #BATCH size for training, no need to change
-EVAL_BATCH_SIZE = 2   #BATCH size for evaluation, no need to change
+BERT_NUM = int(configParser.get('config', 'BERT_NUM')) #21459 #This has to be set equal to the model-ckpt file number generated after BERT fine tuning
+TRAIN_BATCH_SIZE = int(configParser.get('config', 'TRAIN_BATCH_SIZE'))#4  #BATCH size for training, no need to change
+EVAL_BATCH_SIZE = int(configParser.get('config', 'EVAL_BATCH_SIZE'))#2   #BATCH size for evaluation, no need to change
 LEARNING_RATE = 1e-5 #learning rate
 NUM_TRAIN_EPOCHS = 1.0 #no need to change
 WARMUP_PROPORTION = 0.1 #no need to change
-MAX_SEQ_LENGTH = 150 #maximum sequence length used while fine tuning BERT
-NUM_SAMPLE = 4500  #This has to be set as per the requirement of the experiemnent
-uncased = True #False
-all_class = True #Can be true or False
+MAX_SEQ_LENGTH = int(configParser.get('config', 'seq_length'))#150 #maximum sequence length used while fine tuning BERT
+NUM_SAMPLE = int(configParser.get('config', 'NUM_SAMPLE'))#4500  #This has to be set as per the requirement of the experiemnent
+uncased = eval(configParser.get('config', 'uncased'))#True #False
+all_class = eval(configParser.get('config', 'all_class'))  # True #Can be true or False
 #######################
 folder = './../model_folder'
 OUTPUT_DIR = f'{folder}/outputs'

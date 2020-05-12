@@ -22,10 +22,14 @@ from utils import *
 import sys
 import copy
 import time
+import configparser
 t = time.time()
-n_sample = 999999 #set as default value. Does operations on the entire dataframe. Can be set to a lower value which
-                  #will randomly sample those many number of rows
-all_class = True  #set to True. If False it will do class reduction to generate a balanced dataset for DL models
+configParser = configparser.RawConfigParser()   
+configFilePath = './../config.txt'
+configParser.read(configFilePath)
+
+n_sample = int(configParser.get('config', 'n_sample')) #999999 #set as default value. Does operations on the entire dataframe. Can be set to a lower value which will randomly sample those many number of rows
+all_class = eval(configParser.get('config', 'all_class'))  #set to True. If False it will do class reduction to generate a balanced dataset for DL models
 print('all_class set to ', str(all_class))
 print('sampling is set to ', str(n_sample))
 print('======================================================\n')
