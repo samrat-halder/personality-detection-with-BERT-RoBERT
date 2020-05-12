@@ -25,8 +25,8 @@ Step-by-step instructions for running the codes:
 4. Run ```python3 predict_bert.py```. If you set the parameter to *FLAG = 'H'* then it will prepare a dataset with grouped embeddings for the entire document of each individual user and pass it to the RoBERT model. Otherwise it will run the fine tuned BERT model on a test dataset. Also you need to set the *BERT_NUM* parameter from the *ckpt* file from step 3. Please refer to the script for other parameters. 
 5. Run ```python3 run_model_roBert.py``` to run the RoBERT model.
 
-*Please note some of the functions of this repository was taken from Google Research's BERT repository*
+*Please note some of the functions of this repository were taken from Google Research's BERT repository*
 
 **Results**: We achieved 41% accuracy on an 8-class and 43% accuracy on a 4-class classification problem with MBTI type personality detection in our research. We also ran the 4-class classification task with RoBERT for the full document and achieved the best accuracy of 29.8%.
 
-For 4-class classification the fine-tuning and training BERT-base model took 2 hr 25 mins with 230,428 examples (each of length 150 words). For the same classification task with RoBERT using 10 epochs, batch size of 5 took 2 hr 43 minutes with 7218 samples (whole document). Other computation times for data preparation and other experiments can be found in the log files.
+For 4-class classification the fine-tuning and training BERT-base model took 2 hr 25 mins with 230,428 examples (each of length 150 words). For the same classification task with RoBERT using 5 epochs, batch size of 5 took 2 hr 43 minutes with 7218 samples (whole document). Other computation times for data preparation and other experiments can be found in the log files.
