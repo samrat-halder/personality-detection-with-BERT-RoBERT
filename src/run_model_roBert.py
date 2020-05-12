@@ -1,3 +1,17 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+This Run Model 2 RoBERT with the embeddings from fine tuned BERT
+
+__author__ = "Samrat Halder"
+__copyright__ = "Copyright 2020, ELEN6040 Research Project"
+__license__ = "GPL"
+__version__ = "1.0.1"
+__maintainer__ = "Samrat Halder"
+__email__ = "sh3970@columbia.edu"
+__status__ = "Production"
+"""
+
 import tensorflow as tf
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 from keras.utils import np_utils
@@ -11,8 +25,8 @@ from func import *
 import time
 
 t = time.time()
-epochs = 5
-MAX_SEQ_LENGTH = 150
+epochs = 5 #can be set to a higher value based on the training sample size
+MAX_SEQ_LENGTH = 150 
 NUM_SAMPLE = 999999 
 all_class = False
 emb_data = pd.read_pickle('./../data/training_data_lstm_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) + '.pkl')
@@ -29,7 +43,7 @@ batches_per_epoch_train = len(df_train) // batch_size_train
 df_train = df_train[:batch_size_train*batches_per_epoch_train] #Fixing dimension to nearest batch
 assert len(df_train) == batches_per_epoch_train * batch_size_train
 
-batch_size_val = 5
+batch_size_val = 5 #Do not set a very high value, can lead to memory error
 batches_per_epoch_val = len(df_val) // batch_size_train
 df_val = df_val[:batch_size_val*batches_per_epoch_val]
 
@@ -68,6 +82,6 @@ y_pred = model.predict_generator(test_generator, steps= batches_per_epoch_test)
 y_pred = np.argmax(y_pred, axis=-1)
 y_test = df_test['label']#test_generator.classes[validation_generator.index_array]
 
-print('\n__________\nloss: ', loss, 'accuracy: ', acc) # loss:  0.47286026436090467 accuracy:  0.864
-print('accuracy_score: \n', classification_report(y_test, y_pred)) # accuracy_score:  0.095
+print('\n__________\nloss: ', loss, 'accuracy: ', acc) 
+print('accuracy_score: \n', classification_report(y_test, y_pred)) 
 print('Total time taken :', round(time.time()-t, 2), ' s')

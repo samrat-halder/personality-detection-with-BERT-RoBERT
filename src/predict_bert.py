@@ -1,3 +1,19 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+It does two things. If FLAG is set to "H" it pepares a training and test set for RoBERT
+If FLAG is set to "S" it test the fine tuned BERT model on a randomly selected test set
+
+__author__ = "Samrat Halder"
+__copyright__ = "Copyright 2020, ELEN6040 Research Project"
+__license__ = "GPL"
+__version__ = "1.0.1"
+__maintainer__ = "Samrat Halder"
+__email__ = "sh3970@columbia.edu"
+__status__ = "Production"
+"""
+
+
 import pandas as pd
 import os
 import datetime
@@ -20,22 +36,24 @@ from func import *
 import time
 folder = './../model_folder'
 t = time.time()
-FLAG = 'H'
-TRAIN_BATCH_SIZE = 4
-EVAL_BATCH_SIZE = 2
-LEARNING_RATE = 1e-5
-NUM_TRAIN_EPOCHS = 1.0
-WARMUP_PROPORTION = 0.1
-MAX_SEQ_LENGTH = 150
-NUM_SAMPLE = 4500
+FLAG = 'H'       #If set to "H" it will create a training test set for RoBERT with BERT embeddings
+                 #else this wil test the BERT model
+BERT_NUM = 21459 #This has to be set equal to the model-ckpt file number generated after BERT fine tuning
+TRAIN_BATCH_SIZE = 4  #BATCH size for training, no need to change
+EVAL_BATCH_SIZE = 2   #BATCH size for evaluation, no need to change
+LEARNING_RATE = 1e-5 #learning rate
+NUM_TRAIN_EPOCHS = 1.0 #no need to change
+WARMUP_PROPORTION = 0.1 #no need to change
+MAX_SEQ_LENGTH = 150 #maximum sequence length used while fine tuning BERT
+NUM_SAMPLE = 4500  #This has to be set as per the requirement of the experiemnent
 uncased = True #False
-all_class = True
+all_class = True #Can be true or False
 #######################
 folder = './../model_folder'
 OUTPUT_DIR = f'{folder}/outputs'
 # Model configs
 SAVE_CHECKPOINTS_STEPS = 100000 #if you wish to finetune a model on a larger dataset, use larger interval
-# each checpoint weights about 1,5gb
+                                 # each checpoint weights about 1,5gb
 ITERATIONS_PER_LOOP = 100000
 NUM_TPU_CORES = 8
 
@@ -73,13 +91,14 @@ print('BERT model :', BERT_MODEL)
 
 VOCAB_FILE = os.path.join(BERT_PRETRAINED_DIR, 'vocab.txt')
 CONFIG_FILE = os.path.join(BERT_PRETRAINED_DIR, 'bert_config.json')
-INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, 'model.ckpt-57614')
+INIT_CHECKPOINT = os.path.join(OUTPUT_DIR, f'model.ckpt-{BERT_NUM}')
 
 if FLAG != 'H':
   fname = './../data/training_data_sample_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) +'.pkl'
   mbti_data = pd.read_pickle(fname)
   ####
-  mbti_data = mbti_data.sample(n=500000)
+  mbti_data = mbti_data.sample(n=500000)#We randomly select 500000 rows to reduce the computational load
+  mbti_data.reset_index(drop=True, inplace=True)
   ####
   df = pd.DataFrame()
   df["Text"] = mbti_data['comment']
@@ -88,7 +107,8 @@ else:
   fname = './../data/training_data_sample_h_' + str(MAX_SEQ_LENGTH) + '_' + str(NUM_SAMPLE) + '_' + str(all_class) + '.pkl'
   mbti_data = pd.read_pickle(fname)
   ####
-  mbti_data = mbti_data[:1000000]
+  mbti_data = mbti_data.sample(n=1200000) #We randomly select 1200000 rows to reduce the computational load, higher value may cause memory error
+  mbti_data.reset_index(drop=True, inplace=True)
   ####
   df = pd.DataFrame()
   df["Text"] = mbti_data['comment']
@@ -153,14 +173,14 @@ print("\n____________\nTime taken : ", round(time.time()-t2,2), ' s')
 
 result = estimator.predict(input_fn=predict_input_fn)
 
-if FLAG != 'H':
+if FLAG != 'H': #Test Model 1
   preds = []
   for prediction in result:
     preds.append(np.argmax(prediction['probabilities']))
 
   print("\n__________\nAccuracy of BERT is:",accuracy_score(np.array(df['Label']),preds))
   print(classification_report(np.array(df['Label']),preds))
-else:
+else: #prepare data for Model 2
   #Load Heirechical data
   df_emb = get_embedding(result)
 

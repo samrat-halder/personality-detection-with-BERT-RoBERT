@@ -1,3 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+This script does fine tuning and training the BERT classifier.
+
+
+__author__ = "Samrat Halder"
+__copyright__ = "Copyright 2020, ELEN6040 Research Project"
+__license__ = "GPL"
+__version__ = "1.0.1"
+__maintainer__ = "Samrat Halder"
+__email__ = "sh3970@columbia.edu"
+__status__ = "Production"
+"""
+
 #%tensorflow_version 1.11
 import pandas as pd
 import os 
@@ -19,15 +34,15 @@ from sklearn.metrics import classification_report
 from func import *
 import time
 #######################
-TRAIN_BATCH_SIZE = 4
-EVAL_BATCH_SIZE = 2
-LEARNING_RATE = 1e-5
-NUM_TRAIN_EPOCHS = 1.0
-WARMUP_PROPORTION = 0.1
-MAX_SEQ_LENGTH = 150
-NUM_SAMPLE = 2500
-uncased = True #False
-all_class = True
+TRAIN_BATCH_SIZE = 4     #training batch size. Do not set a high value. May arise memory error
+EVAL_BATCH_SIZE = 2      #evaluation batch size
+LEARNING_RATE = 1e-5     #learning rate
+NUM_TRAIN_EPOCHS = 1.0   #number of training epochs
+WARMUP_PROPORTION = 0.1  #warmup proportion 
+MAX_SEQ_LENGTH = 150     #max sequence length for BERT input sequence
+NUM_SAMPLE = 2500        #number of samples being used. This should be same as the data_prep file
+uncased = True #False    #can be True or False Defaul True. We use uncased version of the BERT pretrained model
+all_class = True         #can be True or False
 #######################
 folder = './../model_folder'
 # Model configs
