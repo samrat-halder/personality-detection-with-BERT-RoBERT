@@ -5,6 +5,8 @@ Detection of MBTI-type personality with state-of-art language models
 
 *Minimum server requirements: 30 Gb CPU, 15 Gb NVIDIA P100 GPU*
 
+## Settting up GCP environment and running experiments
+
 Step-by-step instructions for setting up the environment:
 1. Download libcudnn7-dev_7.4.2.24-1+cuda9.0_amd64.deb, libcudnn7-doc_7.4.2.24-1+cuda9.0_amd64.deb, libcudnn7_7.4.2.24-1+cuda9.0_amd64.deb to your home folder from Nvidia developer website. Please note the versions (the module may not be compatible with any other version)
 2. Clone the git repository to your home
@@ -18,6 +20,9 @@ Step-by-step instructions for setting up the environment:
 
 
 Step-by-step instructions for running the codes:
+
+*First one needs to setup the config file. Please follow the instructions below file-by-file according to your experiement. You may want to change the config file parameters from script to script to reduce the runtime.*
+
 1. ```cd ./src``` 
 2. To quickly check a summary of the data run ```python3 data_summary.py```. You may need to change the default parameters *n_sample = 999999 all_class = True*. This will output a file in data directory with sentence length for each user. Please note this may take long time if you run for the entire dataset. *999999* is the default value that runs for the whole sample.
 2. Run ```python3 src/data_prep.py``` to create training samples for both the models. You may want to change the default parameters *seq_length = 150, overlap_length = 25, n_sample = 999999, all_class = False*. This will create files in the data directory for BERT and RoBERT. The default value for *n_sample* took almost three hours in our machine.
@@ -26,6 +31,8 @@ Step-by-step instructions for running the codes:
 5. Run ```python3 run_model_roBert.py``` to run the RoBERT model.
 
 *Please note some of the functions of this repository were taken from Google Research's BERT repository*
+
+## Results
 
 **Results**: We achieved 41% accuracy on an 8-class and 43% accuracy on a 4-class classification problem with MBTI type personality detection in our research. We also ran the 4-class classification task with RoBERT for the full document and achieved the best accuracy of 29.8%.
 
