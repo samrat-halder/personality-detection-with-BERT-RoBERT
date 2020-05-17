@@ -24,27 +24,36 @@ Step-by-step instructions for running the codes:
 *First one needs to setup the config file. Please follow the instructions below file-by-file according to your experiement. You may want to change the config file parameters from script to script to reduce the runtime.*
 
 1. ```cd ./src``` 
-2. To quickly check a summary of the data run ```python3 data_summary.py```. You may need to change the default parameters *n_sample = 999999 all_class = True*. This will output a file in data directory with sentence length for each user. Please note this may take long time if you run for the entire dataset. *999999* is the default value that runs for the whole sample.
-2. Run ```python3 src/data_prep.py``` to create training samples for both the models. You may want to change the default parameters *seq_length = 150, overlap_length = 25, n_sample = 999999, all_class = False*. This will create files in the data directory for BERT and RoBERT. The default value for *n_sample* took almost three hours in our machine.
-3. Run ```python3 train_bert.py``` with default parameters *TRAIN_BATCH_SIZE = 4, EVAL_BATCH_SIZE = 2, LEARNING_RATE = 1e, NUM_TRAIN_EPOCHS = 1.0, WARMUP_PROPORTION = 0.1, MAX_SEQ_LENGTH = 150, NUM_SAMPLE = 4500, uncased = True #False, all_class = True* This will fine tune the BERT model for the classification task. It will *create model.ckpt-NUM* files in the model_folder/outputs directory. 
+2. To quickly check a summary of the data run ```python3 data_summary.py```. This will output a file in data directory with sentence length for each user. 
+2. Run ```python3 src/data_prep.py``` to create training samples for both the models. 
+3. Run ```python3 train_bert.py``` This will fine tune the BERT model for the classification task. It will *create model.ckpt-NUM* files in the model_folder/outputs directory. 
 4. Run ```python3 predict_bert.py```. If you set the parameter to *FLAG = 'H'* then it will prepare a dataset with grouped embeddings for the entire document of each individual user and pass it to the RoBERT model. Otherwise it will run the fine tuned BERT model on a test dataset. Also you need to set the *BERT_NUM* parameter from the *ckpt* file from step 3. Please refer to the script for other parameters. 
 5. Run ```python3 run_model_roBert.py``` to run the RoBERT model.
 
-*Please note some of the functions of this repository were taken from Google Research's BERT repository*
+*Please note some of the functions in ./utils/ of this repository were taken from Google Research's BERT repository*
 
 ## Results
 
 **Results**: We achieved 41% accuracy on an 8-class and 43% accuracy on a 4-class classification problem with MBTI type personality detection in our research. We also ran the 4-class classification task with RoBERT for the full document and achieved the best accuracy of 29.8%.
 
+**4-Class**
 | Class | Precision	| Recall	| f1 |
 | :---: | :---: | :---: | :---: |
 | INTP	| 0.49	| 0.42	| 0.45 |
 | INF	| 0.41	| 0.64	| 0.5 |
 | INTJ |	0.41 |	0.41 |	0.41 |
 | EN	| 0.44	| 0.18	| 0.26 |
-
-
-
+**8-Class**
+| Class | Precision	| Recall	| f1 |
+| :---: | :---: | :---: | :---: |
+| INTP | 0.47	| 0.45 | 0.46 |
+| INTJ | 0.39 |	0.69 | 	0.5 |
+| INFP | 0.35 |	0.27 |	0.31 |
+| INFJ | 0.4 | 0.24 |	0.3 |
+| ENTP | 0.55 |	0.12 | 0.2 |
+| ENFP | 0.37 |	0.1 |	0.15 |
+| ENTJ | 0.38 |	0.05 | 0.09 |
+| ENFJ | 0.28 |	0.04 | 0.07 |
 
 For 4-class classification the fine-tuning and training BERT-base model took 2 hr 25 mins with 230,428 examples (each of length 150 words). For the same classification task with RoBERT using 5 epochs, batch size of 5 took 2 hr 43 minutes with 7218 samples (whole document). Other computation times for data preparation and other experiments can be found in the log files.
 
