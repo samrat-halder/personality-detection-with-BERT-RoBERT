@@ -61,7 +61,7 @@ For 4-class classification the fine-tuning and training BERT-base model took 2 h
 
 ## Contact Information
 
-This repository has beend developed and maintained by Samrat Halder. For any communication related to this repository please contact sh3970@columbia.edu
+This repository has been developed and maintained by Samrat Halder as a part of *ELEN6040: Deep learning Research course* offered by Professor Zoran Kostic at Columbia University. For any communication related to this repository please contact sh3970@columbia.edu
 
 ## License
 
