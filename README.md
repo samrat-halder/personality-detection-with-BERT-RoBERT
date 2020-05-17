@@ -41,3 +41,7 @@ For 4-class classification the fine-tuning and training BERT-base model took 2 h
 ## Contact Information
 
 For any communication related to this repository please contact Samrat Halder (sh3970@columbia.edu)
+
+## License
+
+This repository has been released under GPL-3.0
