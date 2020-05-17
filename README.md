@@ -43,7 +43,9 @@ Step-by-step instructions for running the codes:
 | INF	| 0.41	| 0.64	| 0.5 |
 | INTJ |	0.41 |	0.41 |	0.41 |
 | EN	| 0.44	| 0.18	| 0.26 |
+
 **8-Class**
+
 | Class | Precision	| Recall	| f1 |
 | :---: | :---: | :---: | :---: |
 | INTP | 0.47	| 0.45 | 0.46 |
